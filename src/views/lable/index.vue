@@ -25,7 +25,7 @@
               prop="date"
               label="发布日期"
               sortable
-              width="180"
+              width="120"
               column-key="date"
               :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
               :filter-method="filterHandler"
@@ -33,18 +33,42 @@
             </el-table-column>
             <el-table-column
               prop="name"
-              label="名称"
-              width="180">
+              label="标签名称"
+              width="120">
             </el-table-column>
             <el-table-column
               prop="address"
-              label="口径"
+              label="标签描述"
               :formatter="formatter">
             </el-table-column>
             <el-table-column
               prop="cycle"
-              label="账期"
-              width="150">
+              label="周期"
+              width="120">
+            </el-table-column>
+            <el-table-column
+              prop="lastSyn"
+              label="最后同步"
+              width="120">
+            </el-table-column>
+            <el-table-column
+              prop="state"
+              label="状态"
+              width="100">
+              <template slot-scope="scope">
+                <span v-if="scope.row.state == 1" style="color: #7f8085">创建中</span>
+                <span v-if="scope.row.state == 2" style="color: green">已完成</span>
+                <span v-if="scope.row.state == 3" style="color: red">失败</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="option"
+              label="操作"
+              width="100">
+              <template slot-scope="scope">
+                <span v-if="scope.row.option == 1" style="color: #7f8085">||</span>
+                <span v-if="scope.row.option == 2" style="color: green">|></span>
+              </template>
             </el-table-column>
 <!--            <el-table-column-->
 <!--              prop="tag"-->
@@ -95,55 +119,82 @@
           name: '冒险类游戏',
           address: '这个标签中包含的信息都是冒险类游戏的信息',
           tag: '游戏',
-          cycle:"2020-02-06"
+          cycle:"月",
+          state:"1",
+          lastSyn:"2020-03",
+          option:"2"
         }, {
           date: '2020-01-19',
           name: '恐怖片',
           address: '这个标签中包含的视频都属于恐怖视频',
           tag: '视频',
-          cycle:"2020-02-06"
+          cycle:"月",
+          state:"2",
+          lastSyn:"2020-03",
+          option:"1"
         }, {
           date: '2020-01-19',
           name: '射击类',
           address: '这个标签中包含的信息都是冒险类游戏的信息',
           tag: '游戏',
-          cycle:"2020-02-06"
+          cycle:"日",
+          state:"3",
+          lastSyn:"2020-03-07",
+          option:"2"
         }, {
           date: '2020-01-19',
           name: '综艺',
           address: '这个标签中包含的视频都属于综艺',
           tag: '视频',
-          cycle:"2020-02-06"
+          cycle:"月",
+          state:"2",
+          lastSyn:"2020-03-07",
+          option:"1"
         }, {
           date: '2020-01-19',
           name: '综艺',
           address: '这个标签中包含的视频都属于综艺',
           tag: '视频',
-          cycle:"2020-02-06"
+          cycle:"一次性",
+          state:"2",
+          lastSyn:"2020-03-07",
+          option:"1"
         }, {
           date: '2020-01-19',
           name: '综艺',
           address: '这个标签中包含的视频都属于综艺',
           tag: '视频',
-          cycle:"2020-02-06"
+          cycle:"月",
+          state:"1",
+          lastSyn:"2020-03",
+          option:"2"
         }, {
           date: '2020-01-19',
           name: '综艺',
           address: '这个标签中包含的视频都属于综艺',
           tag: '视频',
-          cycle:"2020-02-06"
+          cycle:"月",
+          state:"1",
+          lastSyn:"2020-03",
+          option:"1"
         }, {
           date: '2020-01-19',
           name: '综艺',
           address: '这个标签中包含的视频都属于综艺',
           tag: '视频',
-          cycle:"2020-02-06"
+          cycle:"月",
+          state:"1",
+          lastSyn:"2020-03",
+          option:"1"
         }, {
           date: '2020-01-19',
           name: '综艺',
           address: '这个标签中包含的视频都属于综艺',
           tag: '视频',
-          cycle:"2020-02-06"
+          cycle:"月",
+          state:"1",
+          lastSyn:"2020-03",
+          option:"2"
         }]
       };
     },

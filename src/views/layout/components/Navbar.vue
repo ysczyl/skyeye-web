@@ -2,7 +2,7 @@
   <div class="iheader" style="float: none">
     <div class="ilogo">
       <img src="@/assets/sys_images/logo.png" width="25px" height="auto">
-      <em>标签自助挖掘平台</em>
+      <em>上网日志检索平台</em>
     </div>
     <i id="bars" class="fa fa-bars" title="侧栏菜单展开/隐藏"/>
     <!--顶部右侧图标-->

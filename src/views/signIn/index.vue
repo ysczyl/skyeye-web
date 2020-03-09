@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container class="login-container">
     <el-header style="background-color: rgb(0, 0, 0);opacity: 0.5;left: 0;top: 0;position: fixed;z-index: 100;width: 100%;height: 1000px">
     </el-header>
 
@@ -13,11 +13,11 @@
           <div style="text-align: center;color: #7f8085;">数据改变世界</div>
         </div>
         <el-form :label-position="labelPosition" model="formLabelAlign" style="width: 302px;margin-left: 27px">
-          <el-input placeholder="手机/邮箱/用户名" style="margin-top: 20px" v-model="formLabelAlign.name"></el-input>
-          <el-input placeholder="密码" style="margin-top: 20px" v-model="formLabelAlign.region"></el-input>
-          <el-checkbox style="margin-top: 20px" text-color="#000000" v-model="checked">下次自动登陆</el-checkbox>
-          <el-button style="margin-top: 15px;width: 302px" type="primary" @click="toDashboard">登陆</el-button>
-          <el-link type="primary" style="margin-top: 15px">忘记密码？</el-link>
+          <el-input placeholder="手机/邮箱/用户名" style="margin-top: 20px" v-model="loginForm.man"></el-input>
+          <el-input placeholder="密码" type="password" style="margin-top: 20px" v-model="loginForm.ans"></el-input>
+<!--          <el-checkbox style="margin-top: 20px" text-color="#000000" v-model="checked">下次自动登陆</el-checkbox>-->
+          <el-button style="margin-top: 15px;width: 302px;margin-top:30px" type="primary" @click="handleLogin">登陆</el-button>
+<!--          <el-link type="primary" style="margin-top: 15px">忘记密码？</el-link>-->
         </el-form>
       </div>
     </el-main>
@@ -25,13 +25,17 @@
 </template>
 
 <script>
-
+  import { login } from '../../api/login'
   export default {
     name: 'SingIn',
     data() {
       return {
         labelPosition: 'right',
         checked: true,
+        loginForm:{
+            man: '',
+            ans: ''
+        },
         formLabelAlign: {
           name: '',
           region: '',
@@ -40,6 +44,12 @@
       };
     },
     methods: {
+      handleLogin() {
+        this.$store.dispatch('Login', this.loginForm).then(() => {
+          this.$router.push( '/dashboard')
+        }).catch(() => {
+        })
+      },
       toDashboard() {
         this.$router.push({ path: '/dashboard' })
       }
@@ -63,6 +73,12 @@
 
 
 <style scoped>
+  .login-container {
+    with: 100%;
+    height: 100%;
+    background: url("../../images/login_bg.png") no-repeat;
+    background-size: 100% 100%;
+  }
   .signInImg{
     width: 60px;
     height: 60px;

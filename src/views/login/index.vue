@@ -3,7 +3,7 @@
     <div class="login-header">
       <div class="ilogo">
         <img src="@/assets/sys_images/logo.png" width="" height="">
-        <em><b>标签自助挖掘平台</b></em>
+        <em><b>上网日志检索平台</b></em>
         <el-button type="primary" style="float: right;margin-top: 5px;margin-right: 2%" @click="dialogFormVisible = true">登录</el-button>
       </div>
       <div class="imsg"/>
