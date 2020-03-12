@@ -32,6 +32,7 @@ export const constantRouterMap = [
   { path: '/mine', component: () => import('@/views/mine/index'), hidden: true },
   { path: '/advancedSearch', component: () => import('@/views/advancedSearch/index'), hidden: true },
   { path: '/lable', component: () => import('@/views/lable/index'), hidden: true },
+  { path: '/user', component: () => import('@/views/user/index'), hidden: true },
   { name: 'kinds', path: '/kinds', component: () => import('@/views/kinds/index'), hidden: true },
   //,
 

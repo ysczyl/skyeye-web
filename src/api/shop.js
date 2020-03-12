@@ -1,8 +1,9 @@
 import request from '@/utils/request'
 
-export function searchKeys(params) {
+  /*购物车接口*/
+export function getlistById(params) {
   return request({
-    url: '/searchKeys',
+    url: '/getShopByUserId',
     method: 'post',
     data: {
       ...params
@@ -11,11 +12,11 @@ export function searchKeys(params) {
 }
 
 
-export function searchKind(params) {
+export function addToShop(params) {
   return request({
-    url: '/searchKind',
+    url: '/addShop',
     method: 'post',
-    data :{
+    data: {
       ...params
     }
   })
