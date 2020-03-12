@@ -9,3 +9,14 @@ export function searchKeys(params) {
     }
   })
 }
+
+
+export function searchKind(params) {
+  return request({
+    url: '/searchKind',
+    method: 'post',
+    data :{
+      ...params
+    }
+  })
+}

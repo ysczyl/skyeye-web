@@ -9,7 +9,7 @@
       <div class="searchInput" style="position: absolute;left: 20px">
         <el-input v-model="searchKey.keys" placeholder="请输入内容" style="width: 440px"/>
 
-        <el-button slot="append" icon="el-icon-search" style="background: #3385ff;border-bottom: 1px solid #2d78f4;color: #fff;" @click.native="searchInfo">搜索</el-button>
+        <el-button slot="append" icon="el-icon-search" style="background: #3385ff;border-bottom: 1px solid #2d78f4;color: #fff;" @click.native="searchInfoKey">搜索</el-button>
         <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;margin-left: 30px" @click="drawer = true">高级搜索</el-link>
         <!--        <el-button size="small" style="position: absolute;right: 0px;top: 60px;z-index: 60">批量加入分类</el-button>-->
       </div>
@@ -98,12 +98,28 @@
         <el-tabs v-model="activeName" class="tab-container" style="line-height:40px;margin-left: 120px;padding-top:5px;line-height:30px;font-size: 20px;overflow-y:hidden;" @tab-click="handleClick">
           <el-tab-pane
             v-for="(item, index) in tabPane"
-            :label="item.poiCls1"
-            :name="item.poiCls1Code">
+            :label="item.sortName"
+            :name="item.sortCode">
             <el-row>
-              <div v-for="(item, index) in sortKinds" style="display: inline-block">
-                <el-link @click="kindClick(item.poiCls2Code)">{{item.poiCls2}}</el-link>
-                <el-divider direction="vertical"/>
+              <div>
+                <div v-for="(item2, index2) in item.son">
+                  <el-link style="width: 100px" @click="searchking('POI_CLS1_CODE,POI_CLS2_CODE',item.sortCode + ',' + item2.sortCode)">{{item2.sortName}}</el-link>
+                  <el-divider direction="vertical"/>
+                  <div v-for="(item3, index3) in item2.son" style="display: inline-block">
+                    <el-popover
+                      placement="top-start"
+                      trigger="hover">
+                      <div v-for="(item4, index4) in item3.son">
+                        <el-link style="width: 100px" @click="searchking('POI_CLS1_CODE,POI_CLS2_CODE,POI_CLS3_CODE,POI_CLS4_CODE',item.sortCode + ',' + item2.sortCode + ','+item3.sortCode + ',' + item4.sortCode)">{{item4.sortName}}</el-link>
+                        <el-divider direction="vertical"/>
+                        <div v-for="(item5, index5) in item4.son" style="display: inline-block">
+                          <el-link style="margin-right: 15px" @click="searchking('POI_CLS1_CODE,POI_CLS2_CODE,POI_CLS3_CODE,POI_CLS4_CODE,POI_CLS5_CODE',item.sortCode + ',' + item2.sortCode + ','+item3.sortCode + ',' + item4.sortCode + ',' +item5.sortCode)">{{item5.sortName}}</el-link>
+                        </div>
+                      </div>
+                      <el-link slot="reference" style="margin-right: 15px" @click="searchking('POI_CLS1_CODE,POI_CLS2_CODE,POI_CLS3_CODE',item.sortCode + ',' + item2.sortCode + ','+item3.sortCode)">{{item3.sortName}}</el-link>
+                    </el-popover>
+                  </div>
+                </div>
               </div>
             </el-row>
           </el-tab-pane>
@@ -144,6 +160,7 @@
             style="padding: 15px 0 15px 0;width: 100%"
             background
             :current-page=pageIn
+            :page-size="10"
             @current-change="handleCurrentChange"
             font-size="12px !important"
             layout="prev, pager, next"
@@ -206,7 +223,7 @@
 import advancedSearch from './../advancedSearch'
 import lable from './../lable'
 import signIn from './../signIn'
-import { searchKeys } from '../../api/search'
+import { searchKeys,searchKind } from '../../api/search'
 import { searchSort,findSortInfo,searchKey } from '../../api/sort'
 
 export default {
@@ -218,6 +235,7 @@ export default {
       radio: '2',
       pageIn:1,
       total:0,
+      searchfs:"",
       tabPaneName:'nothing',
       searchKey: {
         keys: '',
@@ -228,7 +246,7 @@ export default {
         page: 0
       },
       sorts: {
-        parent: 0
+        parent: "0"
       },
       dialogFormVisible: true,
       activeName: 'nothing',
@@ -250,9 +268,18 @@ export default {
         delivery: false,
         type: [],
         resource: '',
-        desc: ''
+        desc: '',
+        isActive:false,
       },
-      sortKinds:[],
+      searchKinds: {
+        sortSize:"",
+        sortCode:"",
+        pages:""
+      },
+      sortKinds2:[],
+      sortKinds3:[],
+      sortKinds4:[],
+      sortKinds5:[],
       tableData: [{
         title: '冒险岛官方网站(MapleStory)-爱我就来冒险吧!',
         content: '2D横版卷轴式网络游戏——《冒险岛Online》是旗下的一款超人气家庭休闲网游。整个游戏画面以2D平面展开,采用了与其他Q版2D游戏不同的横向卷轴的移动方式。游戏场景...',
@@ -375,112 +402,112 @@ export default {
         uri: 'abc.4399.com',
         check: false
       }],
-      hot: [{
-        title: '英雄联盟LPL总决赛',
-        pvuv: '309万',
-        host: 'https://lol.qq.com/main.shtml'
-      }, {
-        title: 'PPD中单亚索带崩三路',
-        pvuv: '302万',
-        host: 'https://lol.qq.com/main.shtml'
-      }, {
-        title: '剑网三元宵盒子',
-        pvuv: '204万',
-        host: 'https://lol.qq.com/main.shtml'
-      }, {
-        title: 'RNG战队官宣LPL春季赛名单 Uzi首发',
-        pvuv: '110万',
-        host: 'https://lol.qq.com/main.shtml'
-      }, {
-        title: 'WE微博官宣：前KT战队教练Noex加入',
-        pvuv: '89万',
-        host: 'https://lol.qq.com/main.shtml'
-      }],
-      selected: [{
-        title: '英雄联盟 -- LPL总决赛视频',
-        pvuv: '309万',
-        host: 'https://lol.qq.com/main.shtml'
-      }, {
-        title: '剑网三 -- 重磅推出免点卡任意玩',
-        pvuv: '302万',
-        host: 'https://lol.qq.com/main.shtml'
-      }, {
-        title: '剑网三 -- 推出元宵打灯活动',
-        pvuv: '204万',
-        host: 'https://lol.qq.com/main.shtml'
-      }, {
-        title: '逆水寒 -- 重磅推出免点卡任意玩活动',
-        pvuv: '110万',
-        host: 'https://lol.qq.com/main.shtml'
-      }, {
-        title: 'WE微博官宣 -- 前KT战队教练Noex加入',
-        pvuv: '89万',
-        host: 'https://lol.qq.com/main.shtml'
-      }],
-      content: [{
-        title: '冒险手机游戏',
-        pvuv: '309万'
-      }, {
-        title: '冒险岛手机版官网',
-        pvuv: '302万'
-      }, {
-        title: '冒险岛',
-        pvuv: '302万'
-      }, {
-        title: '冒险益智小游戏',
-        pvuv: '204万'
-      }, {
-        title: '猪猪公寓手机游戏下载',
-        pvuv: '110万'
-      }, {
-        title: '冒险闯关游戏',
-        pvuv: '89万'
-      }, {
-        title: '闯关游戏',
-        pvuv: '89万'
-      }, {
-        title: '冒险游戏',
-        pvuv: '89万'
-      }],
-      tabPane: [{
-        title: '金融',
-        name: 'firdt'
-      },
-      {
-        title: '医疗',
-        name: 'second'
-      },
-      {
-        title: '交通',
-        name: 'thrid'
-      },
-      {
-        title: '游戏',
-        name: 'forth'
-      },
-      {
-        title: '教育',
-        name: 'jy'
-      },
-      {
-        title: '能源',
-        name: 'fiveth'
-      },
-      {
-        title: '快递',
-        name: 'six'
-      },
-      {
-        title: '餐饮',
-        name: 'server'
-      }, {
-        title: 'IT',
-        name: 'eight'
-      },
-      {
-        title: '>>更多',
-        name: 'last'
-      }]
+      // hot: [{
+      //   title: '英雄联盟LPL总决赛',
+      //   pvuv: '309万',
+      //   host: 'https://lol.qq.com/main.shtml'
+      // }, {
+      //   title: 'PPD中单亚索带崩三路',
+      //   pvuv: '302万',
+      //   host: 'https://lol.qq.com/main.shtml'
+      // }, {
+      //   title: '剑网三元宵盒子',
+      //   pvuv: '204万',
+      //   host: 'https://lol.qq.com/main.shtml'
+      // }, {
+      //   title: 'RNG战队官宣LPL春季赛名单 Uzi首发',
+      //   pvuv: '110万',
+      //   host: 'https://lol.qq.com/main.shtml'
+      // }, {
+      //   title: 'WE微博官宣：前KT战队教练Noex加入',
+      //   pvuv: '89万',
+      //   host: 'https://lol.qq.com/main.shtml'
+      // }],
+      // selected: [{
+      //   title: '英雄联盟 -- LPL总决赛视频',
+      //   pvuv: '309万',
+      //   host: 'https://lol.qq.com/main.shtml'
+      // }, {
+      //   title: '剑网三 -- 重磅推出免点卡任意玩',
+      //   pvuv: '302万',
+      //   host: 'https://lol.qq.com/main.shtml'
+      // }, {
+      //   title: '剑网三 -- 推出元宵打灯活动',
+      //   pvuv: '204万',
+      //   host: 'https://lol.qq.com/main.shtml'
+      // }, {
+      //   title: '逆水寒 -- 重磅推出免点卡任意玩活动',
+      //   pvuv: '110万',
+      //   host: 'https://lol.qq.com/main.shtml'
+      // }, {
+      //   title: 'WE微博官宣 -- 前KT战队教练Noex加入',
+      //   pvuv: '89万',
+      //   host: 'https://lol.qq.com/main.shtml'
+      // }],
+      // content: [{
+      //   title: '冒险手机游戏',
+      //   pvuv: '309万'
+      // }, {
+      //   title: '冒险岛手机版官网',
+      //   pvuv: '302万'
+      // }, {
+      //   title: '冒险岛',
+      //   pvuv: '302万'
+      // }, {
+      //   title: '冒险益智小游戏',
+      //   pvuv: '204万'
+      // }, {
+      //   title: '猪猪公寓手机游戏下载',
+      //   pvuv: '110万'
+      // }, {
+      //   title: '冒险闯关游戏',
+      //   pvuv: '89万'
+      // }, {
+      //   title: '闯关游戏',
+      //   pvuv: '89万'
+      // }, {
+      //   title: '冒险游戏',
+      //   pvuv: '89万'
+      // }],
+      // tabPane: [{
+      //   title: '金融',
+      //   name: 'firdt'
+      // },
+      // {
+      //   title: '医疗',
+      //   name: 'second'
+      // },
+      // {
+      //   title: '交通',
+      //   name: 'thrid'
+      // },
+      // {
+      //   title: '游戏',
+      //   name: 'forth'
+      // },
+      // {
+      //   title: '教育',
+      //   name: 'jy'
+      // },
+      // {
+      //   title: '能源',
+      //   name: 'fiveth'
+      // },
+      // {
+      //   title: '快递',
+      //   name: 'six'
+      // },
+      // {
+      //   title: '餐饮',
+      //   name: 'server'
+      // }, {
+      //   title: 'IT',
+      //   name: 'eight'
+      // },
+      // {
+      //   title: '>>更多',
+      //   name: 'last'
+      // }]
     }
   },
   created(){
@@ -489,11 +516,11 @@ export default {
   methods: {
     handleClick(tab, event) {
       console.log(tab)
-      if (this.activeName !== this.findsort.sortCode) {
-        this.findsort.sortCode = tab.name
-        findSortInfo(this.findsort).then(response => {
+      if (this.activeName !== this.findsort.sortCode && tab.name != 'last') {
+        this.sorts.parent = tab.name
+        searchSort(this.sorts).then(response => {
           console.log(response)
-          this.sortKinds = response.data
+          this.sortKinds2 = response.data
         })
       }else {
         this.activeName = 'nothing'
@@ -506,6 +533,25 @@ export default {
         this.$router.push({ path: '/kinds' })
       }
     },
+
+    handleClicks(parent,index){
+      console.log(parent)
+      this.sorts.parent = parent
+      searchSort(this.sorts).then(response => {
+        console.log(response)
+        if(index == 2){
+          this.sortKinds3 = response.data
+        }else if(index == 3){
+          this.sortKinds4 = response.data
+        }else if(index == 4){
+          this.sortKinds5 = response.data
+        }else if(index == 5){
+
+        }
+      })
+
+    },
+
     closeTab() {
       console.log(1111, this.activeName)
       // this.activeName = ''
@@ -540,18 +586,40 @@ export default {
         }
       }
     },
+    searchking(index,sortCode){
+      this.searchKinds.sortSize = index
+      this.searchKinds.sortCode = sortCode
+      this.searchKinds.pages  = this.pageIn-1
+      searchKind(this.searchKinds).then(response => {
+        console.log(response)
+        this.tableData = response.data
+        this.total = response.total
+      })
+
+    },
+    mouseEnter() { this.isActive = true },
+    mouseOut() { this.isActive = false },
+    searchInfoKey(){
+      this.searchfs = 'key'
+      this.searchInfo();
+    },
     searchInfo() {
-      if(this.activeName == 'nothing'){
+      if(this.searchfs == 'key'){
         searchKeys(this.searchKey).then(response => {
           console.log(response)
           this.tableData = response.data
           this.total = response.total
         })
-      }else {
-        this.findsort.keys = this.searchKey.keys
-        searchKey(this.findsort).then(response => {
+      }else if(this.searchfs == 'high'){
+        searchKeys(this.advancedKey).then(response => {
           console.log(response)
-          this.tableData = response.data.content
+          this.tableData = response.data
+        })
+      } else {
+        searchKind(this.searchKinds).then(response => {
+          console.log(response)
+          this.tableData = response.data
+          this.total = response.total
         })
       }
     },
@@ -559,6 +627,7 @@ export default {
       searchSort(this.sorts).then(response => {
         console.log(response)
         this.tabPane = response.data
+        this.activeName = response.data[0].sortCode
       })
     },
     kindClick(val) {
@@ -576,6 +645,7 @@ export default {
       searchKeys(this.advancedKey).then(response => {
         console.log(response)
         this.tableData = response.data
+        this.searchfs = "high"
       })
       this.drawer = false
     },
@@ -589,13 +659,16 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.searchKey.page = val -1
+      this.searchKinds.pages = val - 1
       this.findsort.page = val
+      this.advancedKey.page = val - 1
       this.searchInfo()
     }
 
   }
 }
 </script>
+
 
 <style>
   /*.el-container {*/
