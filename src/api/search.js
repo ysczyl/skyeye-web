@@ -4,7 +4,7 @@ export function searchKeys(params) {
   return request({
     url: '/searchKeys',
     method: 'post',
-    data :{
+    data: {
       ...params
     }
   })

@@ -6,7 +6,8 @@ const user = {
   state: {
     token: getToken(),
     name: '',
-    roles: []
+    roles: [],
+    userId: ''
   },
 
   mutations: {
@@ -18,6 +19,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_USERID: (state, userId) => {
+      state.userId = userId
     }
   },
   actions: {
@@ -47,6 +51,7 @@ const user = {
             reject('getInfo: roles must be a non-null array !')
           }
           commit('SET_NAME', data.name)
+           commit('SET_USERID' , data.userId)
           resolve(response)
         }).catch(error => {
           reject(error)

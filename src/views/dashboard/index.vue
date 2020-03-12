@@ -13,7 +13,7 @@
         <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;margin-left: 30px" @click="drawer = true">高级搜索</el-link>
         <!--        <el-button size="small" style="position: absolute;right: 0px;top: 60px;z-index: 60">批量加入分类</el-button>-->
       </div>
-      <div style="width: 200px;height: 30px;float: right">
+      <div style="width: 250px;height: 30px;float: right">
         <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;" @click="toShop">host购物车</el-link>
         <el-divider direction="vertical"/>
         <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;" @click="toHelp">帮助</el-link>
@@ -24,6 +24,14 @@
           <div class="dropdown-content" style="margin-left: -30px;padding-top: 0px">
             <el-link style="height: 30px;font-size: 12px;margin-top: 0px;" @click="toMine">个人信息</el-link>
             <el-link style="height: 30px;font-size: 12px" @click="toLable">标签预览</el-link>
+          </div>
+        </div>
+        <el-divider direction="vertical"/>
+        <div class="dropdown">
+          <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;" @click="toUser">系统管理</el-link>
+          <div class="dropdown-content" style="margin-left: -30px;padding-top: 0px">
+            <el-link style="height: 30px;font-size: 12px;margin-top: 0px;" @click="toUser">用户管理</el-link>
+<!--            <el-link style="height: 30px;font-size: 12px" @click="toLable">标签预览</el-link>-->
           </div>
         </div>
       </div>
@@ -123,12 +131,12 @@
       <!--      搜索结果内容-->
       <div style="margin-left: 120px;margin-top: 10px">
         <el-checkbox v-model="allCheck" @change="allChecks">全选</el-checkbox>
-        <el-button style="margin-left: 10px;height: 30px;padding-top: 7px" @click="toShop">批量加入购物车</el-button>
+        <el-button style="margin-left: 10px;height: 30px;padding-top: 7px" @click="addShop">批量加入购物车</el-button>
       </div>
       <div style="margin-left: 120px;">
         <div style="width: 770px;float: left;">
           <div v-for="(item, index) in tableData">
-            <el-checkbox v-model="item.check" style="margin-left: -20px;top: 8px;"/>
+            <el-checkbox v-model="item.check" style="margin-left: -20px;top: 8px;" />
             <el-link :underline="false" style="border-bottom: 1px solid black;margin-top: 14px;color: #0000CC" @click="toURL(item.uri)">{{ item.title }}</el-link><br>
             <el-link style="margin-right: 5px;color: green" @click="toURL(item.host)">{{ item.uri }}</el-link>
             <span style="font-size: 12px;color: #4C4C4C;font-weight: bold">近七日UV/PV：{{ item.uv }}/{{ item.pv }}</span><br>
@@ -208,7 +216,9 @@ import lable from './../lable'
 import signIn from './../signIn'
 import { searchKeys } from '../../api/search'
 import { searchSort,findSortInfo,searchKey } from '../../api/sort'
+import {addToShop} from '../../api/shop'
 
+import {mapGetters} from 'vuex'
 export default {
   name: 'Dashboard',
   components: { advancedSearch, signIn, lable },
@@ -256,15 +266,16 @@ export default {
       tableData: [{
         title: '冒险岛官方网站(MapleStory)-爱我就来冒险吧!',
         content: '2D横版卷轴式网络游戏——《冒险岛Online》是旗下的一款超人气家庭休闲网游。整个游戏画面以2D平面展开,采用了与其他Q版2D游戏不同的横向卷轴的移动方式。游戏场景...',
-        key: '4399',
-        time: '2020-02-18',
+        key: '4399',//
+        time: '2020-02-18',//
         pv: 150,
         uv: 50,
-        lable: '游戏',
-        pjNum: '111',
-        sort:'游戏-端游-英雄联盟-ADC-寒冰',
+        lable: '游戏',//
+        pjNum: '111',//
+        sort:'游戏-端游-英雄联盟-ADC-寒冰',//
         uri: '*.4399.com',
-        check: false
+        check: false,//
+        webId:'123'
       },
       {
         title: '冒险小游戏,4399双人冒险小游戏,冒险类小游戏,4399小游戏',
@@ -277,7 +288,8 @@ export default {
         pjNum: '111',
         sort:'游戏-端游-英雄联盟-ADC-寒冰',
         uri: 'abc.4399.com',
-        check: false
+        check: false,
+        webId:'124'
       },
       {
         title: '冒险小游戏_冒险小游戏大全_冒险游戏全集_7k7k冒险小游戏',
@@ -289,7 +301,8 @@ export default {
         lable: '银行',
         pjNum: '111',
         uri: '*.4399.com',
-        check: false
+        check: false,
+        webId:'125'
       },
       {
         title: '安卓冒险游戏大全_好玩的安卓冒险游戏_安卓冒险游戏推荐-游戏下载',
@@ -301,7 +314,8 @@ export default {
         lable: '游戏',
         pjNum: '111',
         uri: 'abc.4399.com',
-        check: false
+        check: false,
+        webId:'126'
       },
       {
         title: '冒险游戏大全_冒险游戏排行榜_冒险单机游戏下载_游戏堡',
@@ -313,7 +327,8 @@ export default {
         lable: '银行',
         pjNum: '111',
         uri: 'abc.4399.com',
-        check: false
+        check: false,
+        webId:'133'
       },
       {
         title: '冒险岛online专区---17173网络游戏',
@@ -325,7 +340,8 @@ export default {
         lable: '游戏',
         pjNum: '111',
         uri: 'abc.4399.com',
-        check: false
+        check: false,
+        webId:'128'
       },
       {
         title: '冒险小游戏_逗游小游戏',
@@ -337,7 +353,8 @@ export default {
         lable: '银行',
         pjNum: '111',
         uri: 'abc.4399.com',
-        check: false
+        check: false,
+        webId:'129'
       },
       {
         title: '布莱克斌 来了-冒险岛2-腾讯游戏',
@@ -349,7 +366,8 @@ export default {
         lable: '游戏',
         pjNum: '111',
         uri: 'abc.4399.com',
-        check: false
+        check: false,
+        webId:'166'
       },
       {
         title: '冒险类手机游戏大全_冒险类网游/单机游戏下载_好玩的冒险类..._九游',
@@ -361,7 +379,8 @@ export default {
         lable: '银行',
         pjNum: '111',
         uri: 'abc.4399.com',
-        check: false
+        check: false,
+        webId:'1235'
       },
       {
         title: '雨中冒险2游戏专区_雨中冒险2中文版下载及攻略秘籍..._游民星空',
@@ -373,7 +392,8 @@ export default {
         lable: '游戏',
         pjNum: '111',
         uri: 'abc.4399.com',
-        check: false
+        check: false,
+        webId:'1238'
       }],
       hot: [{
         title: '英雄联盟LPL总决赛',
@@ -480,13 +500,71 @@ export default {
       {
         title: '>>更多',
         name: 'last'
-      }]
+      }],
+      tempShop:{        // 购物车字段
+        id:'',
+        title:'',
+        pv:'',
+        uv:'',
+        content:'',
+        crtTime:'',
+        url:'',
+        webId:'',
+        userId:'',   // 当前操作用户的id
+        deleteState:''
+      },
+      shops:{
+            arr:[]
+      }
     }
   },
   created(){
     this.searchSorts()
   },
   methods: {
+    addShop(){
+      this.shops.arr =[]
+        for(let i =0;i<this.tableData.length;i++){
+           if(this.tableData[i].check){
+             this.tempShop.title = this.tableData[i].title
+             this.tempShop.pv = this.tableData[i].pv
+             this.tempShop.uv = this.tableData[i].uv
+             this.tempShop.content = this.tableData[i].content
+             this.tempShop.url = this.tableData[i].uri
+             this.tempShop.webId = this.tableData[i].webId
+             this.tempShop.userId = this.userId
+             let obj={
+               id:'',
+               title: this.tempShop.title ,
+               pv: this.tempShop.pv ,
+               uv: this.tempShop.uv,
+               content:this.tempShop.content,
+               crtTime:'',
+               url: this.tempShop.url,
+               webId: this.tempShop.webId,
+               userId:this.tempShop.userId,   // 当前操作用户的id
+               deleteState:'1'
+
+             }
+             this.shops.arr.push(obj)
+             console.log(this.tempShop.title)
+           }
+        }
+      if(this.shops.arr.length===0){
+        this.$message.info("请先勾选host")
+      }else{
+           console.log(this.shops.arr)
+        addToShop(this.shops).then(data=>{
+          this.$message.success("成功添加到购物车")
+            this.toShop()
+        })
+      }
+    },
+
+
+
+
+    ////////////////////////////////////////////
     handleClick(tab, event) {
       console.log(tab)
       if (this.activeName !== this.findsort.sortCode) {
@@ -522,6 +600,9 @@ export default {
     toMine() {
       console.log('1111')
       this.$router.push({ path: '/mine' })
+    },
+    toUser(){
+      this.$router.push({ path: '/user' })
     },
     toHelp() {
       this.$router.push({ path: '/help' })
@@ -593,7 +674,13 @@ export default {
       this.searchInfo()
     }
 
+  },
+  computed: {
+    ...mapGetters([
+      'userId'
+    ]),
   }
+
 }
 </script>
 
