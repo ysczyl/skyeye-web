@@ -165,7 +165,7 @@
 <!--              sortable="custom"-->
 <!--              width="180"-->
 <!--            >-->
-            </el-table-column>
+<!--            </el-table-column>-->
             <el-table-column
               label="标题"
               width="200"

@@ -13,7 +13,7 @@
         <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;margin-left: 30px" @click="drawer = true">高级搜索</el-link>
         <!--        <el-button size="small" style="position: absolute;right: 0px;top: 60px;z-index: 60">批量加入分类</el-button>-->
       </div>
-      <div style="width: 200px;height: 30px;float: right">
+      <div style="width: 280px;height: 30px;float: right">
         <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;" @click="toShop">host购物车</el-link>
         <el-divider direction="vertical"/>
         <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;" @click="toHelp">帮助</el-link>
@@ -26,6 +26,15 @@
             <el-link style="height: 30px;font-size: 12px" @click="toLable">标签预览</el-link>
           </div>
         </div>
+        <el-divider direction="vertical"/>
+        <div class="dropdown">
+          <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;" @click="toUser">系统管理</el-link>
+          <div class="dropdown-content" style="margin-left: -30px;padding-top: 0px">
+            <el-link style="height: 30px;font-size: 12px;margin-top: 0px;" @click="toUser">用户管理</el-link>
+            <!--            <el-link style="height: 30px;font-size: 12px" @click="toLable">标签预览</el-link>-->
+          </div>
+        </div>
+
       </div>
 
     </el-header>
@@ -55,19 +64,19 @@
             </el-form-item>
             <el-form-item label="" prop="region" style="font-size: 13px;font-family: arial;margin-bottom: 0px">
               <el-form-item label="pv值区间" prop="name">
-                <input></input>  -  <input></input>
+                <input v-model="advancedKey.pvBegin"></input>  -  <input v-model="advancedKey.pvEnd"></input>
               </el-form-item>
             </el-form-item>
             <el-form-item label="" prop="region" style="font-size: 13px;font-family: arial;margin-bottom: 0px">
               <el-form-item label="uv值区间" prop="name">
-                <input></input>  -  <input></input>
+                <input v-model="advancedKey.uvBegin"></input>  -  <input v-model="advancedKey.uvEnd"></input>
               </el-form-item>
             </el-form-item>
-<!--            <el-form-item label="" prop="region" style="font-size: 13px;font-family: arial;margin-bottom: 0px">-->
-<!--              <el-form-item label="关键字正则匹配" prop="name">-->
-<!--                <input v-model="ruleForm.time"></input>-->
-<!--              </el-form-item>-->
-<!--            </el-form-item>-->
+            <!--            <el-form-item label="" prop="region" style="font-size: 13px;font-family: arial;margin-bottom: 0px">-->
+            <!--              <el-form-item label="关键字正则匹配" prop="name">-->
+            <!--                <input v-model="ruleForm.time"></input>-->
+            <!--              </el-form-item>-->
+            <!--            </el-form-item>-->
             <!--              <el-form-item label="时间：" prop="region" style="font-size: 13px;font-family: arial;margin-bottom: 0px">-->
             <!--                <el-form-item label="限定要搜索的网页的时间" prop="name">-->
             <!--                  <input v-model="ruleForm.time"></input>-->
@@ -106,18 +115,18 @@
                   <el-link style="width: 100px" @click="searchking('POI_CLS1_CODE,POI_CLS2_CODE',item.sortCode + ',' + item2.sortCode)">{{item2.sortName}}</el-link>
                   <el-divider direction="vertical"/>
                   <div v-for="(item3, index3) in item2.son" style="display: inline-block">
-                    <el-popover
-                      placement="top-start"
-                      trigger="hover">
-                      <div v-for="(item4, index4) in item3.son">
-                        <el-link style="width: 100px" @click="searchking('POI_CLS1_CODE,POI_CLS2_CODE,POI_CLS3_CODE,POI_CLS4_CODE',item.sortCode + ',' + item2.sortCode + ','+item3.sortCode + ',' + item4.sortCode)">{{item4.sortName}}</el-link>
-                        <el-divider direction="vertical"/>
-                        <div v-for="(item5, index5) in item4.son" style="display: inline-block">
-                          <el-link style="margin-right: 15px" @click="searchking('POI_CLS1_CODE,POI_CLS2_CODE,POI_CLS3_CODE,POI_CLS4_CODE,POI_CLS5_CODE',item.sortCode + ',' + item2.sortCode + ','+item3.sortCode + ',' + item4.sortCode + ',' +item5.sortCode)">{{item5.sortName}}</el-link>
-                        </div>
-                      </div>
+<!--                    <el-popover-->
+<!--                      placement="top-start"-->
+<!--                      trigger="hover">-->
+<!--                      <div v-for="(item4, index4) in item3.son">-->
+<!--                        <el-link style="width: 100px" @click="searchking('POI_CLS1_CODE,POI_CLS2_CODE,POI_CLS3_CODE,POI_CLS4_CODE',item.sortCode + ',' + item2.sortCode + ','+item3.sortCode + ',' + item4.sortCode)">{{item4.sortName}}</el-link>-->
+<!--                        <el-divider direction="vertical"/>-->
+<!--                        <div v-for="(item5, index5) in item4.son" style="display: inline-block">-->
+<!--                          <el-link style="margin-right: 15px" @click="searchking('POI_CLS1_CODE,POI_CLS2_CODE,POI_CLS3_CODE,POI_CLS4_CODE,POI_CLS5_CODE',item.sortCode + ',' + item2.sortCode + ','+item3.sortCode + ',' + item4.sortCode + ',' +item5.sortCode)">{{item5.sortName}}</el-link>-->
+<!--                        </div>-->
+<!--                      </div>-->
                       <el-link slot="reference" style="margin-right: 15px" @click="searchking('POI_CLS1_CODE,POI_CLS2_CODE,POI_CLS3_CODE',item.sortCode + ',' + item2.sortCode + ','+item3.sortCode)">{{item3.sortName}}</el-link>
-                    </el-popover>
+<!--                    </el-popover>-->
                   </div>
                 </div>
               </div>
@@ -139,12 +148,12 @@
       <!--      搜索结果内容-->
       <div style="margin-left: 120px;margin-top: 10px">
         <el-checkbox v-model="allCheck" @change="allChecks">全选</el-checkbox>
-        <el-button style="margin-left: 10px;height: 30px;padding-top: 7px" @click="toShop">批量加入购物车</el-button>
+        <el-button style="margin-left: 10px;height: 30px;padding-top: 7px" @click="addShop">批量加入购物车</el-button>
       </div>
       <div style="margin-left: 120px;">
         <div style="width: 770px;float: left;">
           <div v-for="(item, index) in tableData">
-            <el-checkbox v-model="item.check" style="margin-left: -20px;top: 8px;"/>
+            <el-checkbox v-model="item.check" style="margin-left: -20px;top: 8px;" />
             <el-link :underline="false" style="border-bottom: 1px solid black;margin-top: 14px;color: #0000CC" @click="toURL(item.uri)">{{ item.title }}</el-link><br>
             <el-link style="margin-right: 5px;color: green" @click="toURL(item.host)">{{ item.uri }}</el-link>
             <span style="font-size: 12px;color: #4C4C4C;font-weight: bold">近七日UV/PV：{{ item.uv }}/{{ item.pv }}</span><br>
@@ -170,48 +179,48 @@
 
         <div style="width: 300px;float: left;white-space:nowrap;border-left: 1px solid red" >
           <div style="width: 300px;margin-left: 80px;margin-top:15px;position: absolute;">
-<!--            &lt;!&ndash;            热点搜索&ndash;&gt;-->
-<!--            <span class="hot_search">热点搜索</span>-->
-<!--            <div v-for="(item, index) in hot" >-->
-<!--              <div style="margin-top: 15px">-->
-<!--                <div v-if="index == 0" class="hotli" style="background-color: #f54545;">{{ index+1 }}</div>-->
-<!--                <div v-if="index == 1" class="hotli" style="background-color: #ff8547">{{ index+1 }}</div>-->
-<!--                <div v-if="index == 2" class="hotli" style="background-color: #ffac38;">{{ index+1 }}</div>-->
-<!--                <div v-if="index > 2" class="hotli" style="background-color: #8eb9f5;">{{ index+1 }}</div>-->
-<!--                <div style="display: inline-block;border-bottom: 1px solid #606266;width: 285px">-->
-<!--                  <el-link @click="toURL(item.host)">{{ item.title }}</el-link>-->
-<!--                  <span style="float: right">{{ item.pvuv }}</span>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              &lt;!&ndash;              <el-divider style="margin-top: 0"></el-divider>&ndash;&gt;-->
-<!--            </div>-->
+            <!--            &lt;!&ndash;            热点搜索&ndash;&gt;-->
+            <!--            <span class="hot_search">热点搜索</span>-->
+            <!--            <div v-for="(item, index) in hot" >-->
+            <!--              <div style="margin-top: 15px">-->
+            <!--                <div v-if="index == 0" class="hotli" style="background-color: #f54545;">{{ index+1 }}</div>-->
+            <!--                <div v-if="index == 1" class="hotli" style="background-color: #ff8547">{{ index+1 }}</div>-->
+            <!--                <div v-if="index == 2" class="hotli" style="background-color: #ffac38;">{{ index+1 }}</div>-->
+            <!--                <div v-if="index > 2" class="hotli" style="background-color: #8eb9f5;">{{ index+1 }}</div>-->
+            <!--                <div style="display: inline-block;border-bottom: 1px solid #606266;width: 285px">-->
+            <!--                  <el-link @click="toURL(item.host)">{{ item.title }}</el-link>-->
+            <!--                  <span style="float: right">{{ item.pvuv }}</span>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--              &lt;!&ndash;              <el-divider style="margin-top: 0"></el-divider>&ndash;&gt;-->
+            <!--            </div>-->
 
-<!--            &lt;!&ndash;            行业精选&ndash;&gt;-->
-<!--            <div style="margin-top: 30px">-->
-<!--              <span class="hot_search">行业精选</span>-->
-<!--            </div>-->
-<!--            <div v-for="(item, index) in selected" >-->
-<!--              <div style="margin-top: 15px">-->
-<!--                <div v-if="index == 0" class="hotli" style="background-color: #f54545;">{{ index+1 }}</div>-->
-<!--                <div v-if="index == 1" class="hotli" style="background-color: #ff8547">{{ index+1 }}</div>-->
-<!--                <div v-if="index == 2" class="hotli" style="background-color: #ffac38;">{{ index+1 }}</div>-->
-<!--                <div v-if="index > 2" class="hotli" style="background-color: #8eb9f5;">{{ index+1 }}</div>-->
-<!--                <el-link style="border-bottom: 1px solid #606266;">{{ item.title }}</el-link>-->
-<!--                &lt;!&ndash;                <span style="float: right">{{item.pvuv}}</span>&ndash;&gt;-->
-<!--              </div>-->
-<!--              &lt;!&ndash;              <el-divider style="margin-top: 0"></el-divider>&ndash;&gt;-->
-<!--            </div>-->
+            <!--            &lt;!&ndash;            行业精选&ndash;&gt;-->
+            <!--            <div style="margin-top: 30px">-->
+            <!--              <span class="hot_search">行业精选</span>-->
+            <!--            </div>-->
+            <!--            <div v-for="(item, index) in selected" >-->
+            <!--              <div style="margin-top: 15px">-->
+            <!--                <div v-if="index == 0" class="hotli" style="background-color: #f54545;">{{ index+1 }}</div>-->
+            <!--                <div v-if="index == 1" class="hotli" style="background-color: #ff8547">{{ index+1 }}</div>-->
+            <!--                <div v-if="index == 2" class="hotli" style="background-color: #ffac38;">{{ index+1 }}</div>-->
+            <!--                <div v-if="index > 2" class="hotli" style="background-color: #8eb9f5;">{{ index+1 }}</div>-->
+            <!--                <el-link style="border-bottom: 1px solid #606266;">{{ item.title }}</el-link>-->
+            <!--                &lt;!&ndash;                <span style="float: right">{{item.pvuv}}</span>&ndash;&gt;-->
+            <!--              </div>-->
+            <!--              &lt;!&ndash;              <el-divider style="margin-top: 0"></el-divider>&ndash;&gt;-->
+            <!--            </div>-->
 
-<!--            &lt;!&ndash;            相关搜索&ndash;&gt;-->
-<!--            <div style="margin-top: 45px">-->
-<!--              <span class="hot_search">相关搜索</span><br>-->
-<!--              <div v-for="(item, index) in content" style="float: left;margin-right: 15px">-->
-<!--                <div style="margin-top: 15px;">-->
-<!--                  <el-link>{{ item.title }}</el-link>-->
-<!--                </div>-->
-<!--                <el-divider style="margin-top: 0"/>-->
-<!--              </div>-->
-<!--            </div>-->
+            <!--            &lt;!&ndash;            相关搜索&ndash;&gt;-->
+            <!--            <div style="margin-top: 45px">-->
+            <!--              <span class="hot_search">相关搜索</span><br>-->
+            <!--              <div v-for="(item, index) in content" style="float: left;margin-right: 15px">-->
+            <!--                <div style="margin-top: 15px;">-->
+            <!--                  <el-link>{{ item.title }}</el-link>-->
+            <!--                </div>-->
+            <!--                <el-divider style="margin-top: 0"/>-->
+            <!--              </div>-->
+            <!--            </div>-->
           </div>
         </div>
       </div>
@@ -220,453 +229,422 @@
 </template>
 
 <script>
-import advancedSearch from './../advancedSearch'
-import lable from './../lable'
-import signIn from './../signIn'
-import { searchKeys,searchKind } from '../../api/search'
-import { searchSort,findSortInfo,searchKey } from '../../api/sort'
+  import advancedSearch from './../advancedSearch'
+  import lable from './../lable'
+  import signIn from './../signIn'
+  import { searchKeys,searchKind } from '../../api/search'
+  import { searchSort,findSortInfo,searchKey } from '../../api/sort'
+  import {addToShop} from '../../api/shop'
 
-export default {
-  name: 'Dashboard',
-  components: { advancedSearch, signIn, lable },
-  data() {
-    return {
-      allCheck: false,
-      radio: '2',
-      pageIn:1,
-      total:0,
-      searchfs:"",
-      tabPaneName:'nothing',
-      searchKey: {
-        keys: '',
-        page: 0
+  import {mapGetters} from 'vuex'
+  export default {
+    name: 'Dashboard',
+    components: { advancedSearch, signIn, lable },
+    data() {
+      return {
+        allCheck: false,
+        radio: '2',
+        pageIn:1,
+        total:0,
+        searchfs:"",
+        tabPaneName:'nothing',
+        searchKey: {
+          keys: '',
+          page: 0
+        },
+        advancedKey: {
+          rules: '',
+          pvBegin:'',
+          pvEnd:'',
+          uvBegin:'',
+          uvEnd:'',
+          page: 0
+        },
+        sorts: {
+          parent: "0"
+        },
+        dialogFormVisible: true,
+        activeName: 'nothing',
+        drawer: false,
+        findsort:{
+          sortCode:"",
+          keys:"",
+          page:1
+        },
+        ruleForm: {
+          allInKey: '',
+          isKey: '',
+          inKey: '',
+          notInKey: '',
+          time: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        sortKinds:[],
+        searchKinds: {
+          sortSize:"",
+          sortCode:"",
+          pages:""
+        },
+
+
+        tableData: [],
+        hot: [{
+          title: '英雄联盟LPL总决赛',
+          pvuv: '309万',
+          host: 'https://lol.qq.com/main.shtml'
+        }, {
+          title: 'PPD中单亚索带崩三路',
+          pvuv: '302万',
+          host: 'https://lol.qq.com/main.shtml'
+        }, {
+          title: '剑网三元宵盒子',
+          pvuv: '204万',
+          host: 'https://lol.qq.com/main.shtml'
+        }, {
+          title: 'RNG战队官宣LPL春季赛名单 Uzi首发',
+          pvuv: '110万',
+          host: 'https://lol.qq.com/main.shtml'
+        }, {
+          title: 'WE微博官宣：前KT战队教练Noex加入',
+          pvuv: '89万',
+          host: 'https://lol.qq.com/main.shtml'
+        }],
+        selected: [{
+          title: '英雄联盟 -- LPL总决赛视频',
+          pvuv: '309万',
+          host: 'https://lol.qq.com/main.shtml'
+        }, {
+          title: '剑网三 -- 重磅推出免点卡任意玩',
+          pvuv: '302万',
+          host: 'https://lol.qq.com/main.shtml'
+        }, {
+          title: '剑网三 -- 推出元宵打灯活动',
+          pvuv: '204万',
+          host: 'https://lol.qq.com/main.shtml'
+        }, {
+          title: '逆水寒 -- 重磅推出免点卡任意玩活动',
+          pvuv: '110万',
+          host: 'https://lol.qq.com/main.shtml'
+        }, {
+          title: 'WE微博官宣 -- 前KT战队教练Noex加入',
+          pvuv: '89万',
+          host: 'https://lol.qq.com/main.shtml'
+        }],
+        content: [{
+          title: '冒险手机游戏',
+          pvuv: '309万'
+        }, {
+          title: '冒险岛手机版官网',
+          pvuv: '302万'
+        }, {
+          title: '冒险岛',
+          pvuv: '302万'
+        }, {
+          title: '冒险益智小游戏',
+          pvuv: '204万'
+        }, {
+          title: '猪猪公寓手机游戏下载',
+          pvuv: '110万'
+        }, {
+          title: '冒险闯关游戏',
+          pvuv: '89万'
+        }, {
+          title: '闯关游戏',
+          pvuv: '89万'
+        }, {
+          title: '冒险游戏',
+          pvuv: '89万'
+        }],
+        tabPane: [{
+          title: '金融',
+          name: 'firdt'
+        },
+          {
+            title: '医疗',
+            name: 'second'
+          },
+          {
+            title: '交通',
+            name: 'thrid'
+          },
+          {
+            title: '游戏',
+            name: 'forth'
+          },
+          {
+            title: '教育',
+            name: 'jy'
+          },
+          {
+            title: '能源',
+            name: 'fiveth'
+          },
+          {
+            title: '快递',
+            name: 'six'
+          },
+          {
+            title: '餐饮',
+            name: 'server'
+          }, {
+            title: 'IT',
+            name: 'eight'
+          },
+          {
+            title: '>>更多',
+            name: 'last'
+          }],
+        tempShop:{        // 购物车字段
+          id:'',
+          title:'',
+          pv:'',
+          uv:'',
+          content:'',
+          crtTime:'',
+          url:'',
+          webId:'',
+          userId:'',   // 当前操作用户的id
+          deleteState:''
+        },
+        shops:{
+          arr:[]
+        }
+      }
+    },
+    created(){
+      this.searchSorts()
+      this.searchKind();
+    },
+    methods: {
+      addShop(){
+        this.shops.arr =[]
+        for(let i =0;i<this.tableData.length;i++){
+          if(this.tableData[i].check){
+            this.tempShop.title = this.tableData[i].title
+            this.tempShop.pv = this.tableData[i].pv
+            this.tempShop.uv = this.tableData[i].uv
+            this.tempShop.content = this.tableData[i].content
+            this.tempShop.url = this.tableData[i].uri
+            this.tempShop.webId = this.tableData[i].webId
+            this.tempShop.userId = this.userId
+            let obj={
+              id:'',
+              title: this.tempShop.title ,
+              pv: this.tempShop.pv ,
+              uv: this.tempShop.uv,
+              content:this.tempShop.content,
+              crtTime:'',
+              url: this.tempShop.url,
+              webId: this.tempShop.webId,
+              userId:this.tempShop.userId,   // 当前操作用户的id
+              deleteState:'1'
+
+            }
+            this.shops.arr.push(obj)
+            console.log(this.tempShop.title)
+          }
+        }
+        if(this.shops.arr.length===0){
+          this.$message.info("请先勾选host")
+        }else{
+          console.log(this.shops.arr)
+          addToShop(this.shops).then(data=>{
+            this.$message.success("成功添加到购物车")
+            this.toShop()
+          })
+        }
       },
-      advancedKey: {
-        rules: '',
-        page: 0
+
+
+
+
+      ////////////////////////////////////////////
+      handleClick(tab, event) {
+        console.log(tab)
+        if (this.activeName !== this.findsort.sortCode && tab.name != 'last') {
+          this.sorts.parent = tab.name
+          // searchSort(this.sorts).then(response => {
+          //   console.log(response)
+          //   this.sortKinds2 = response.data
+          // })
+        }else {
+          this.activeName = 'nothing'
+        }
+
+
+        const that = this
+        console.log(event.target.innerText == '>>更多')
+        if (event.target.innerText == '>>更多') {
+          this.$router.push({ path: '/kinds' })
+        }
       },
-      sorts: {
-        parent: "0"
-      },
-      dialogFormVisible: true,
-      activeName: 'nothing',
-      drawer: false,
-      findsort:{
-        sortCode:"",
-        keys:"",
-        page:1
-      },
-      ruleForm: {
-        allInKey: '',
-        isKey: '',
-        inKey: '',
-        notInKey: '',
-        time: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
-        isActive:false,
-      },
-      searchKinds: {
-        sortSize:"",
-        sortCode:"",
-        pages:""
-      },
-      sortKinds2:[],
-      sortKinds3:[],
-      sortKinds4:[],
-      sortKinds5:[],
-      tableData: [{
-        title: '冒险岛官方网站(MapleStory)-爱我就来冒险吧!',
-        content: '2D横版卷轴式网络游戏——《冒险岛Online》是旗下的一款超人气家庭休闲网游。整个游戏画面以2D平面展开,采用了与其他Q版2D游戏不同的横向卷轴的移动方式。游戏场景...',
-        key: '4399',
-        time: '2020-02-18',
-        pv: 150,
-        uv: 50,
-        lable: '游戏',
-        pjNum: '111',
-        sort:'游戏-端游-英雄联盟-ADC-寒冰',
-        uri: '*.4399.com',
-        check: false
-      },
-      {
-        title: '冒险小游戏,4399双人冒险小游戏,冒险类小游戏,4399小游戏',
-        content: '14冰娃与火娃4 15火柴人吃豆豆2 16双刃战士无敌版 17天空之城冒险 18屁王兄弟无敌版 19超奥特曼格斗 20冰火人面兽 更多 全部冒险小游戏 123456..15 造梦...',
-        key: '剑三',
-        time: '2020-02-18',
-        pv: 150,
-        uv: 50,
-        lable: '游戏',
-        pjNum: '111',
-        sort:'游戏-端游-英雄联盟-ADC-寒冰',
-        uri: 'abc.4399.com',
-        check: false
-      },
-      {
-        title: '冒险小游戏_冒险小游戏大全_冒险游戏全集_7k7k冒险小游戏',
-        content: '7k7k小游戏大全下设冒险小游戏大全为您提供各种冒险小游戏,冒险小游戏下载,双人冒险小游戏,希望你在7k7k冒险小游戏里玩的开心。',
-        key: '中国银行',
-        time: '2020-02-18',
-        pv: 150,
-        uv: 50,
-        lable: '银行',
-        pjNum: '111',
-        uri: '*.4399.com',
-        check: false
-      },
-      {
-        title: '安卓冒险游戏大全_好玩的安卓冒险游戏_安卓冒险游戏推荐-游戏下载',
-        content: '我们都怀揣着冒险的梦想,这里游戏好玩的冒险游戏推荐给你,让你的冒险梦想燃烧起来!冒险游戏其意思就是有危险的游戏需要玩家去经历和游玩才能通过。这种游戏的特点是...',
-        key: '剑三',
-        time: '2020-02-18',
-        pv: 150,
-        uv: 50,
-        lable: '游戏',
-        pjNum: '111',
-        uri: 'abc.4399.com',
-        check: false
-      },
-      {
-        title: '冒险游戏大全_冒险游戏排行榜_冒险单机游戏下载_游戏堡',
-        content: '游戏堡为您提供最新的冒险游戏大全,这里有最热门的冒险游戏下载,以及冒险游戏排行榜,这里包含了一系列好玩的冒险游戏,好玩的冒险游戏尽在游戏堡冒险游戏大全。',
-        key: '中国银行',
-        time: '2020-02-18',
-        pv: 150,
-        uv: 50,
-        lable: '银行',
-        pjNum: '111',
-        uri: 'abc.4399.com',
-        check: false
-      },
-      {
-        title: '冒险岛online专区---17173网络游戏',
-        content: '17173.com: 中文图形网络游戏尽在17173,17173冒险岛专区... 冒险岛心情故事[快速投稿]冒险的故事以及大家的心情文字,不管是开心还是难过,都可以尽情的表达。[...',
-        key: '剑三',
-        time: '2020-02-18',
-        pv: 150,
-        uv: 50,
-        lable: '游戏',
-        pjNum: '111',
-        uri: 'abc.4399.com',
-        check: false
-      },
-      {
-        title: '冒险小游戏_逗游小游戏',
-        content: '猪猪侠丛林冒险 大头儿子小头爸爸 屁王兄弟2 森林冰火人6地狱 猫和老鼠历险记 大头儿子小头爸爸 冰火熊猫大冒险 超奥特曼冒险 森林冰火人大冒险 被诅咒的水晶 ...',
-        key: '中国银行',
-        time: '2020-02-18',
-        pv: 150,
-        uv: 50,
-        lable: '银行',
-        pjNum: '111',
-        uri: 'abc.4399.com',
-        check: false
-      },
-      {
-        title: '布莱克斌 来了-冒险岛2-腾讯游戏',
-        content: '三大特权齐迎春《冒险岛2》官方网站,是腾讯旗下全新网游大作,延续了《冒险岛》的经典游戏品牌并融入沙盒玩法,是一款拥有萌爆的可爱画面、创新的房屋系统、自由丰富...',
-        key: '剑三',
-        time: '2020-02-18',
-        pv: 150,
-        uv: 50,
-        lable: '游戏',
-        pjNum: '111',
-        uri: 'abc.4399.com',
-        check: false
-      },
-      {
-        title: '冒险类手机游戏大全_冒险类网游/单机游戏下载_好玩的冒险类..._九游',
-        content: '冒险类游戏大全提供最新最好玩的冒险类网游/单机手机游戏下载,推荐权威的冒险类手游排行榜前十名,免费冒险类安卓、iOS、电脑版下载,受到冒险类游戏玩家的一致好评,玩...',
-        key: '中国银行',
-        time: '2020-02-18',
-        pv: 150,
-        uv: 50,
-        lable: '银行',
-        pjNum: '111',
-        uri: 'abc.4399.com',
-        check: false
-      },
-      {
-        title: '雨中冒险2游戏专区_雨中冒险2中文版下载及攻略秘籍..._游民星空',
-        content: '游民星空雨中冒险2游戏专题,提供雨中冒险2中文版下载,雨中冒险2攻略,雨中冒险2修改器,雨中冒险2收集,雨中冒险2角色,隐藏,关卡,剧情,配置,联机,汉化,补丁等游戏资料...',
-        key: '剑三',
-        time: '2020-02-18',
-        pv: 150,
-        uv: 50,
-        lable: '游戏',
-        pjNum: '111',
-        uri: 'abc.4399.com',
-        check: false
-      }],
-      // hot: [{
-      //   title: '英雄联盟LPL总决赛',
-      //   pvuv: '309万',
-      //   host: 'https://lol.qq.com/main.shtml'
-      // }, {
-      //   title: 'PPD中单亚索带崩三路',
-      //   pvuv: '302万',
-      //   host: 'https://lol.qq.com/main.shtml'
-      // }, {
-      //   title: '剑网三元宵盒子',
-      //   pvuv: '204万',
-      //   host: 'https://lol.qq.com/main.shtml'
-      // }, {
-      //   title: 'RNG战队官宣LPL春季赛名单 Uzi首发',
-      //   pvuv: '110万',
-      //   host: 'https://lol.qq.com/main.shtml'
-      // }, {
-      //   title: 'WE微博官宣：前KT战队教练Noex加入',
-      //   pvuv: '89万',
-      //   host: 'https://lol.qq.com/main.shtml'
-      // }],
-      // selected: [{
-      //   title: '英雄联盟 -- LPL总决赛视频',
-      //   pvuv: '309万',
-      //   host: 'https://lol.qq.com/main.shtml'
-      // }, {
-      //   title: '剑网三 -- 重磅推出免点卡任意玩',
-      //   pvuv: '302万',
-      //   host: 'https://lol.qq.com/main.shtml'
-      // }, {
-      //   title: '剑网三 -- 推出元宵打灯活动',
-      //   pvuv: '204万',
-      //   host: 'https://lol.qq.com/main.shtml'
-      // }, {
-      //   title: '逆水寒 -- 重磅推出免点卡任意玩活动',
-      //   pvuv: '110万',
-      //   host: 'https://lol.qq.com/main.shtml'
-      // }, {
-      //   title: 'WE微博官宣 -- 前KT战队教练Noex加入',
-      //   pvuv: '89万',
-      //   host: 'https://lol.qq.com/main.shtml'
-      // }],
-      // content: [{
-      //   title: '冒险手机游戏',
-      //   pvuv: '309万'
-      // }, {
-      //   title: '冒险岛手机版官网',
-      //   pvuv: '302万'
-      // }, {
-      //   title: '冒险岛',
-      //   pvuv: '302万'
-      // }, {
-      //   title: '冒险益智小游戏',
-      //   pvuv: '204万'
-      // }, {
-      //   title: '猪猪公寓手机游戏下载',
-      //   pvuv: '110万'
-      // }, {
-      //   title: '冒险闯关游戏',
-      //   pvuv: '89万'
-      // }, {
-      //   title: '闯关游戏',
-      //   pvuv: '89万'
-      // }, {
-      //   title: '冒险游戏',
-      //   pvuv: '89万'
-      // }],
-      // tabPane: [{
-      //   title: '金融',
-      //   name: 'firdt'
-      // },
-      // {
-      //   title: '医疗',
-      //   name: 'second'
-      // },
-      // {
-      //   title: '交通',
-      //   name: 'thrid'
-      // },
-      // {
-      //   title: '游戏',
-      //   name: 'forth'
-      // },
-      // {
-      //   title: '教育',
-      //   name: 'jy'
-      // },
-      // {
-      //   title: '能源',
-      //   name: 'fiveth'
-      // },
-      // {
-      //   title: '快递',
-      //   name: 'six'
-      // },
-      // {
-      //   title: '餐饮',
-      //   name: 'server'
-      // }, {
-      //   title: 'IT',
-      //   name: 'eight'
-      // },
-      // {
-      //   title: '>>更多',
-      //   name: 'last'
-      // }]
-    }
-  },
-  created(){
-    this.searchSorts()
-  },
-  methods: {
-    handleClick(tab, event) {
-      console.log(tab)
-      if (this.activeName !== this.findsort.sortCode && tab.name != 'last') {
-        this.sorts.parent = tab.name
+      handleClicks(parent,index){
+        console.log(parent)
+        this.sorts.parent = parent
         searchSort(this.sorts).then(response => {
           console.log(response)
-          this.sortKinds2 = response.data
+          if(index == 2){
+            this.sortKinds3 = response.data
+          }else if(index == 3){
+            this.sortKinds4 = response.data
+          }else if(index == 4){
+            this.sortKinds5 = response.data
+          }else if(index == 5){
+
+          }
         })
-      }else {
-        this.activeName = 'nothing'
-      }
 
+      },
 
-      const that = this
-      console.log(event.target.innerText == '>>更多')
-      if (event.target.innerText == '>>更多') {
-        this.$router.push({ path: '/kinds' })
-      }
-    },
-
-    handleClicks(parent,index){
-      console.log(parent)
-      this.sorts.parent = parent
-      searchSort(this.sorts).then(response => {
-        console.log(response)
-        if(index == 2){
-          this.sortKinds3 = response.data
-        }else if(index == 3){
-          this.sortKinds4 = response.data
-        }else if(index == 4){
-          this.sortKinds5 = response.data
-        }else if(index == 5){
-
+      closeTab() {
+        console.log(1111, this.activeName)
+        // this.activeName = ''
+      },
+      toEvaluate() {
+        this.$router.push({ path: '/evaluate' })
+      },
+      toLable() {
+        this.$router.push({ path: '/lable' })
+      },
+      searchKind() {
+        if (this.$route.query.sort && this.$route.query.code) {
+          console.log(this.$route.params.sort)
+          this.searchking(this.$route.query.sort,this.$route.query.code)
         }
-      })
-
-    },
-
-    closeTab() {
-      console.log(1111, this.activeName)
-      // this.activeName = ''
-    },
-    toEvaluate() {
-      this.$router.push({ path: '/evaluate' })
-    },
-    toLable() {
-      this.$router.push({ path: '/lable' })
-    },
-    toShop() {
-      this.$router.push({ path: '/shop' })
-    },
-    toMine() {
-      console.log('1111')
-      this.$router.push({ path: '/mine' })
-    },
-    toHelp() {
-      this.$router.push({ path: '/help' })
-    },
-    toURL(url) {
-      window.open(url, '_blank')
-    },
-    allChecks() {
-      if (this.allCheck) {
-        for (let i = 0; i < this.tableData.length; i++) {
-          this.tableData[i].check = true
+      },
+      toShop() {
+        this.$router.push({ path: '/shop' })
+      },
+      toMine() {
+        console.log('1111')
+        this.$router.push({ path: '/mine' })
+      },
+      toUser(){
+        this.$router.push({ path: '/user' })
+      },
+      toHelp() {
+        this.$router.push({ path: '/help' })
+      },
+      toURL(url) {
+        window.open(url, '_blank')
+      },
+      allChecks() {
+        if (this.allCheck) {
+          for (let i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].check = true
+          }
+        } else {
+          for (let i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].check = false
+          }
         }
-      } else {
-        for (let i = 0; i < this.tableData.length; i++) {
-          this.tableData[i].check = false
-        }
-      }
-    },
-    searchking(index,sortCode){
-      this.searchKinds.sortSize = index
-      this.searchKinds.sortCode = sortCode
-      this.searchKinds.pages  = this.pageIn-1
-      searchKind(this.searchKinds).then(response => {
-        console.log(response)
-        this.tableData = response.data
-        this.total = response.total
-      })
-
-    },
-    mouseEnter() { this.isActive = true },
-    mouseOut() { this.isActive = false },
-    searchInfoKey(){
-      this.searchfs = 'key'
-      this.searchInfo();
-    },
-    searchInfo() {
-      if(this.searchfs == 'key'){
-        searchKeys(this.searchKey).then(response => {
-          console.log(response)
-          this.tableData = response.data
-          this.total = response.total
-        })
-      }else if(this.searchfs == 'high'){
-        searchKeys(this.advancedKey).then(response => {
-          console.log(response)
-          this.tableData = response.data
-        })
-      } else {
+      },
+      searchking(index,sortCode){
+        this.searchfs = ""
+        this.searchKinds.sortSize = index
+        this.searchKinds.sortCode = sortCode
+        this.searchKinds.pages  = this.pageIn-1
         searchKind(this.searchKinds).then(response => {
           console.log(response)
           this.tableData = response.data
           this.total = response.total
         })
-      }
-    },
-    searchSorts() {
-      searchSort(this.sorts).then(response => {
-        console.log(response)
-        this.tabPane = response.data
-        this.activeName = response.data[0].sortCode
-      })
-    },
-    kindClick(val) {
-      this.findsort.sortCode = val
-      searchKey(this.findsort).then(response => {
-        console.log(response)
-        this.tableData = response.data.content
-      })
-    },
-    advancedSearch() {
-      this.advancedKey.rules = 'allInKey€' + this.ruleForm.allInKey +
-      '€isKey€' + this.ruleForm.isKey +
-      '€inKey€' + this.ruleForm.inKey +
-      '€notInKey€' + this.ruleForm.notInKey + ' #'
-      searchKeys(this.advancedKey).then(response => {
-        console.log(response)
-        this.tableData = response.data
-        this.searchfs = "high"
-      })
-      this.drawer = false
-    },
-    handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
+
+      },
+      mouseEnter() { this.isActive = true },
+      mouseOut() { this.isActive = false },
+      searchInfoKey(){
+        this.ruleForm.allInKey = ""
+        this.ruleForm.isKey = ""
+        this.ruleForm.inKey = ""
+        this.ruleForm.notInKey = ""
+        this.advancedKey.pvBegin = ""
+        this.advancedKey.uvBegin = ""
+        this.advancedKey.pvEnd = ""
+        this.advancedKey.uvEnd = ""
+        this.searchfs = 'key'
+        this.searchInfo();
+      },
+      searchInfo() {
+        if(this.searchfs == 'key'){
+          if(this.searchKey.keys != ""){
+            searchKeys(this.searchKey).then(response => {
+              console.log(response)
+              this.tableData = response.data
+              this.total = response.total
+            })
+          }
+        }else if(this.searchfs == 'high'){
+          searchKeys(this.advancedKey).then(response => {
+            console.log(response)
+            this.tableData = response.data
+          })
+        } else {
+          searchKind(this.searchKinds).then(response => {
+            console.log(response)
+            this.tableData = response.data
+            this.total = response.total
+          })
+        }
+      },
+      searchSorts() {
+        searchSort(this.sorts).then(response => {
+          console.log(response)
+          this.tabPane = response.data
+          this.activeName = response.data[0].sortCode
         })
-        .catch(_ => {})
+      },
+      kindClick(val) {
+        this.findsort.sortCode = val
+        searchKey(this.findsort).then(response => {
+          console.log(response)
+          this.tableData = response.data.content
+        })
+      },
+      advancedSearch() {
+        this.searchKey.keys = ""
+        this.advancedKey.rules = 'allInKey€' + this.ruleForm.allInKey +
+          '€isKey€' + this.ruleForm.isKey +
+          '€inKey€' + this.ruleForm.inKey +
+          '€notInKey€' + this.ruleForm.notInKey + '#'
+        searchKeys(this.advancedKey).then(response => {
+          console.log(response)
+          this.tableData = response.data
+          this.total = response.total
+          this.searchfs = "high"
+        })
+        this.drawer = false
+      },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {})
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+        this.searchKey.page = val -1
+        this.searchKinds.pages = val - 1
+        this.findsort.page = val
+        this.advancedKey.page = val - 1
+        this.searchInfo()
+      }
+
     },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.searchKey.page = val -1
-      this.searchKinds.pages = val - 1
-      this.findsort.page = val
-      this.advancedKey.page = val - 1
-      this.searchInfo()
+    computed: {
+      ...mapGetters([
+        'userId'
+      ]),
     }
 
   }
-}
 </script>
 
 

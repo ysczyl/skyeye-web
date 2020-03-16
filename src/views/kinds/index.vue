@@ -98,11 +98,11 @@
 
           <div>
             <div v-for="(item2, index2) in kind.son" style="margin-top: 10px">
-              <el-link v-if="index2 == 0" style="width: 80px;padding:5px;background-color: #c41e1e;color:white">{{item2.sortName}}</el-link>
-              <el-link v-else-if="index2 == 1" style="width: 80px;;padding:5px;background-color: #ff5c00;color:white">{{item2.sortName}}</el-link>
-              <el-link v-else-if="index2 == 2" style="width: 80px;;padding:5px;background-color: #fabc3d;color:white">{{item2.sortName}}</el-link>
-              <el-link v-else-if="index2 == 3" style="width: 80px;;padding:5px;background-color: #477cd5;color:white">{{item2.sortName}}</el-link>
-              <el-link v-else style="width: 80px;;padding:5px;background-color: #53b35e;color:white">{{item2.sortName}}</el-link>
+              <el-link v-if="index2 == 0" style="width: 80px;padding:5px;background-color: #c41e1e;color:white" @click="toSearch('POI_CLS1_CODE,POI_CLS2_CODE',kind.sortCode + ',' + item2.sortCode)">{{item2.sortName}}</el-link>
+              <el-link v-else-if="index2 == 1" style="width: 80px;;padding:5px;background-color: #ff5c00;color:white" @click="toSearch('POI_CLS1_CODE,POI_CLS2_CODE',kind.sortCode + ',' + item2.sortCode)">{{item2.sortName}}</el-link>
+              <el-link v-else-if="index2 == 2" style="width: 80px;;padding:5px;background-color: #fabc3d;color:white" @click="toSearch('POI_CLS1_CODE,POI_CLS2_CODE',kind.sortCode + ',' + item2.sortCode)">{{item2.sortName}}</el-link>
+              <el-link v-else-if="index2 == 3" style="width: 80px;;padding:5px;background-color: #477cd5;color:white" @click="toSearch('POI_CLS1_CODE,POI_CLS2_CODE',kind.sortCode + ',' + item2.sortCode)">{{item2.sortName}}</el-link>
+              <el-link v-else style="width: 80px;;padding:5px;background-color: #53b35e;color:white" @click="toSearch('POI_CLS1_CODE,POI_CLS2_CODE',kind.sortCode + ',' + item2.sortCode)">{{item2.sortName}}</el-link>
 
               <div v-for="(item3, index3) in item2.son" style="display: inline-block">
                 <el-divider direction="vertical"/>
@@ -116,7 +116,7 @@
                       <el-link style="margin-right: 15px">{{item5.sortName}}</el-link>
                     </div>
                   </div>
-                  <el-link slot="reference" style="margin-right: 15px">{{item3.sortName}}</el-link>
+                  <el-link slot="reference" style="margin-right: 15px" @click="toSearch('POI_CLS1_CODE,POI_CLS2_CODE,POI_CLS3_CODE',kind.sortCode + ',' + item2.sortCode + ','+item3.sortCode)">{{item3.sortName}}</el-link>
                 </el-popover>
               </div>
             </div>
@@ -302,6 +302,15 @@
       handleCurrentChange(val) {
         this.searchJson.page = val-1
         this.searchAll()
+      },
+      toSearch(sort,code){
+        this.$router.push({
+          name:"dashboard",
+          query: {
+            sort: sort,
+            code:code
+          }
+        })
       }
     }
   }
