@@ -21,3 +21,26 @@ export function addToShop(params) {
     }
   })
 }
+
+
+
+export function deleteShop(params) {
+  return request({
+    url: '/deleteShop',
+    method: 'post',
+    data: {
+      ...params
+    }
+  })
+}
+
+
+export function deleteAll(params) {
+  return request({
+    url: '/deleteAllShop',
+    method: 'post',
+    data: {
+      ...params
+    }
+  })
+}

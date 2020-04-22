@@ -24,6 +24,17 @@ export function findList(params) {
 }
 
 
+export function findListAll(params) {
+  return request({
+    url: '/findLabelAll',
+    method: 'post',
+    data: {
+      ...params
+    }
+  })
+}
+
+
 export function operation(params) {
   return request({
     url: '/operationstate',
@@ -34,4 +45,25 @@ export function operation(params) {
   })
 }
 
+//////////////////////////////////////////////手动同步数据接口
+export function updateOnce(params) {
+  return request({
+    url: '/updateCustomerOnce',
+    method: 'post',
+    data: {
+      ...params
+    }
+  })
+}
 
+
+
+export function topN(params) {
+  return request({
+    url: '/topN',
+    method: 'post',
+    data: {
+      ...params
+    }
+  })
+}

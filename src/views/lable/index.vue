@@ -14,7 +14,7 @@
             <span class="lable_font">标签同步任务</span>
           </template>
           <div style="margin-top: 15px;">
-            <el-input placeholder="请输入搜索标签名称关键字" v-model="listQuery.name" class="input-with-select">
+            <el-input placeholder="请输入搜索标签名称关键字" v-model="listQuery.name" @keyup.enter.native="getList" class="input-with-select">
               <el-button slot="append" icon="el-icon-search" @click="getList"></el-button>
             </el-input>
           </div>

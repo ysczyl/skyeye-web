@@ -2,7 +2,7 @@
   <el-container>
     <!--    头部搜索框-->
     <el-header style="background-color: #eee">
-      <div style="margin-top:10px;font-size: 28px;position:absolute;width: 1024px;left: calc(50% - 512px);">用户信息</div>
+      <div style="margin-top:10px;font-size: 28px;position:absolute;width: 1024px;left: calc(50% - 666px);">用户信息</div>
     </el-header>
     <el-container>
       <el-main style="padding:10px 20px">
@@ -12,14 +12,14 @@
 <!--            <el-button size="medium" @click="pessinfoback">返回</el-button>-->
           </div>
           <!-- 用户信息 -->
-          <div style="margin-top: 15px;width: 1300px;margin-left: calc(50% - 512px);">
+          <div style="margin-top: 15px;width: 1300px;margin-left: calc(50% - 666px);">
 <!--            创建用户按钮-->
             <div id="main" style="width:100%;">
             <div id="left" style="width:25%;float:left;" >
             <el-button type="primary" @click="showCreate"><i class="el-icon-upload el-icon--right" ></i>新建用户</el-button>
             </div>
             <div id="right" style="width:65%;float:right;" align="right">
-            <el-input placeholder="输入用户姓名/账号"  style="width: 60% " v-model="listQuery.name" >
+            <el-input placeholder="输入用户姓名/账号"  style="width: 60% " v-model="listQuery.name"  @keyup.enter.native="getList">
               <el-button slot="append" icon="el-icon-search" @click="getList">
               </el-button>
               </el-input>

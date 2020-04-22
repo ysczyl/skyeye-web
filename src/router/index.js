@@ -28,14 +28,14 @@ export const constantRouterMap = [
   { path: '/shop', component: () => import('@/views/shop/index'), hidden: true },
   { path: '/evaluate', component: () => import('@/views/evaluate/index'), hidden: true },
   { path: '/help', component: () => import('@/views/help/index'), hidden: true },
-  { path: '/dashboard', component: () => import('@/views/dashboard/index'), hidden: true },
+  {name: 'dashboard', path: '/dashboard', component: () => import('@/views/dashboard/index'), hidden: true  },
   { path: '/mine', component: () => import('@/views/mine/index'), hidden: true },
   { path: '/advancedSearch', component: () => import('@/views/advancedSearch/index'), hidden: true },
   { path: '/lable', component: () => import('@/views/lable/index'), hidden: true },
   { path: '/user', component: () => import('@/views/user/index'), hidden: true },
   { name: 'kinds', path: '/kinds', component: () => import('@/views/kinds/index'), hidden: true },
+  { path: '/labelControl', component: () => import('@/views/labelControll/index'), hidden: true },
   //,
-
 ]
 
 export const dynamicRouter = [

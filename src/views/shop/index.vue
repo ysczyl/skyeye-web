@@ -88,7 +88,7 @@
           <span class="lable_font">host购物车</span>
         </template>
           <div style="margin-top: 15px;">
-            <el-input placeholder="请输入host标题关键字" v-model="listQuery.name" class="input-with-select">
+            <el-input placeholder="请输入host标题关键字" v-model="listQuery.name" @keyup.enter.native="getList" class="input-with-select">
               <el-button slot="append" icon="el-icon-search" @click="getList"></el-button>
             </el-input>
           </div>
@@ -103,7 +103,7 @@
                 <div style="margin-bottom: 5px">
                   <span>时间范围：</span>
                   <el-date-picker
-                    v-model="time"
+                    v-model="searchCGP.times"
                     size="mini"
                     type="daterange"
                     range-separator="至"
@@ -113,44 +113,57 @@
                 </div>
                 <span style="margin-right:10px">分组TOPN</span>
                 <span>分组条件</span>
-                <el-select size="mini" v-model="searchCGP.value1" style="width: 100px" @change="checkCgp">
+                <el-select size="mini" v-model="searchCGP.hostKind" style="width: 100px" @change="checkCgp">
                   <el-option value="host">host</el-option>
                   <el-option value="客群">客群</el-option>
                 </el-select>
                 <span>统计指标</span>
-                <el-select size="mini" v-model="searchCGP.value2" style="width: 100px" @change="checkCgp">
+                <el-select size="mini" v-model="searchCGP.pv" style="width: 100px" @change="checkCgp">
                   <el-option value="PV">PV</el-option>
                 </el-select>
-                <el-select size="mini" v-model="searchCGP.value3" style="width: 100px" @change="checkCgp">
+                <el-select size="mini" v-model="searchCGP.sumOrCount" style="width: 100px" @change="checkCgp">
                   <el-option value="求和">求和</el-option>
                   <el-option value="计数">计数</el-option>
                 </el-select>
                 <span>按</span>
-                <el-select size="mini" v-model="searchCGP.value4" style="width: 100px" @change="checkCgp">
+                <el-select size="mini" v-model="searchCGP.order" style="width: 100px" @change="checkCgp">
                   <el-option value="从大到小">从大到小</el-option>
                   <el-option value="从小到大">从小到大</el-option>
                 </el-select>
                 <span>排名，取前</span>
-                <el-input size="mini" v-model="searchCGP.value5" style="width: 100px" @change="checkCgp"></el-input>
+                <el-input size="mini" v-model="searchCGP.size" style="width: 100px" @change="checkCgp"></el-input>
                 <span>名</span>
-                <el-button type="primary" size="mini">搜索</el-button><br>
+                <el-button type="primary" size="mini" @click="topNsearch">搜索</el-button><br>
                 <!--                <el-input type="button">查询</el-input>-->
-                <span>客群人数：0</span>
+                <span>客群人数：{{this.cgpNumber}}</span>
               </div>
             </el-collapse-item>
           </el-collapse>
 <!--         标签定制按钮-->
-          <el-button style="float: right;margin-top: 10px;right: 20px;z-index: 999" @click="showcreate">定制标签</el-button>
+          <div id="main" style="width:100%;">
+            <div id="left" style="width:25%;float:left;" >
+              <div align="left"><el-checkbox  v-model="checked"  @change="chooseAllshop">全选购物车</el-checkbox>
+                 <span style="color:silver" v-if="checked==false">|当前已选中{{this.sels.length}}个host</span>
+                <span style="color:silver" v-if="checked==true">|当前已选中{{totalCount}}个host</span>
+              </div>
+            </div>
+            <div id="right" style="width:65%;float:right;" align="right">
+              <el-button style="float: right;margin-top: 10px;right: 20px;z-index: 999" @click="showcreate">定制标签</el-button>
+            </div><br><br>
+          </div>
+            <div align="left"></div>
 
-
+<!--购物车标签展示区域-->
           <el-table
             ref="filterTable"
             :data="tableData"
             style="width: 100%"
             @sort-change='sortChange'
             @selection-change="selsChange"
+            :row-key="getRowKeys"
             >
             <el-table-column
+              :reserve-selection="true"
               type="selection"
               width="60">
             </el-table-column>
@@ -165,7 +178,7 @@
 <!--              sortable="custom"-->
 <!--              width="180"-->
 <!--            >-->
-            </el-table-column>
+<!--            </el-table-column>-->
             <el-table-column
               label="标题"
               width="200"
@@ -176,8 +189,8 @@
             </el-table-column>
             <el-table-column
               prop="uv，pv"
-              label="uv/pv"
-              width="200"
+              label="近7日 uv/pv"
+              width="180"
               align="center">
               <template slot-scope="scope">{{scope.row.uv}}/{{scope.row.pv}}</template>
             </el-table-column>
@@ -189,7 +202,7 @@
             <el-table-column
               prop="content"
               label="内容"
-              width="460"
+              width="410"
               align="center"
             >
             </el-table-column>
@@ -200,19 +213,22 @@
 <!--            </el-table-column>-->
 
 
-<!--            <el-table-column label="操作">-->
-<!--              <template slot-scope="scope">-->
+            <el-table-column label="操作">
+              <template slot-scope="scope">
 <!--                <el-button-->
 <!--                  size="mini"-->
 <!--                  @click="handleEdit(scope.$index, scope.row)">查看</el-button>-->
-<!--&lt;!&ndash;                <el-button&ndash;&gt;-->
-<!--&lt;!&ndash;                  size="mini"&ndash;&gt;-->
-<!--&lt;!&ndash;                  type="danger"&ndash;&gt;-->
-<!--&lt;!&ndash;                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>&ndash;&gt;-->
-<!--              </template>-->
-<!--            </el-table-column>-->
+                <el-button
+                  size="mini"
+                  type="danger"
+                  icon="el-icon-delete"
+                  plain
+                  @click="shopDelete(scope.$index)"></el-button>
+              </template>
+            </el-table-column>
 
           </el-table>
+          <div align="right"><el-button  type="danger" @click="deleteAllshop" :disabled="this.sels.length === 0"><i class="el-icon-delete"  ></i>批量删除</el-button></div>
           <!--          分页区域-->
           <div align="center">
           <el-pagination
@@ -221,7 +237,7 @@
             :current-page="listQuery.pageNum"
             :page-size="listQuery.pageRow"
             :total="totalCount"
-            :page-sizes="[3, 5, 10, 20]"
+            :page-sizes="[5, 10, 20, 50]"
             layout="total, sizes, prev, pager, next, jumper">
           </el-pagination>
           </div>
@@ -232,8 +248,8 @@
 </template>
 
 <script>
-  import {getlistById} from '../../api/shop'
-  import {createLabel} from '../../api/label'
+  import {getlistById,deleteShop,deleteAll} from '../../api/shop'
+  import {createLabel,updateOnce,topN} from '../../api/label'
   import {mapGetters} from 'vuex'
   export default {
     name: 'Shop',
@@ -244,7 +260,6 @@
         totalCount:0,           //数据总条数
         dialogFormVisible:false,
         formLabelWidth: '120px',
-        time:'',
         cgpUserShow:false,
         dateShow:false,
         form:{
@@ -252,11 +267,16 @@
           region:""
         },
         searchCGP:{
-          value1:"host",
-          value2:"PV",
-          value3:"求和",
-          value4:"从大到小",
-          value5:"",
+          times:'',
+          hostKind:"host",
+          pv:"PV",
+          sumOrCount:"求和",
+          order:"从大到小",
+          size:"",
+          webIds: "",
+          pvs:"",
+          timeStart:"",
+          timeEnd:""
         },
         labelPosition: 'right',
         month:"",
@@ -274,7 +294,17 @@
           lastSynchronizarion:'',
           operationState:'',
           shopIDs:'',
-          labReturnId:''
+          labReturnId:'',
+          times:'',
+          hostKind:"host",
+          pv:"PV",
+          sumOrCount:"求和",
+          order:"从大到小",
+          size:"",
+          webIds: "",
+          pvs:"",
+          timeStart:"",
+          timeEnd:""
         },
         radio: '1',
         radio2: '1',
@@ -372,7 +402,16 @@
           id:'' // 当前用户id
         },
         sels: [],//选中显示的值
-        createState:0   //用于防止重复创建标签
+        ids:{
+          dearr:''
+        },
+        cgpNumber:0,
+        createState:0,   //用于防止重复创建标签
+        checked:false,  // 全选购物车状态check
+        choosestate:1,  //全选购物车状态
+        getRowKeys(row) {   // 翻页后保留选择框状态
+          return row.id;
+        },
       };
     },
     created() {
@@ -386,15 +425,16 @@
           getlistById(this.listQuery).then(data=>{
             this.tableData = data.data
             this.totalCount = data.total
+            this.ischooseAllshop()  //选择购物车全选后，分页后依然全部选中
+            // this.ischooseAllshopfasle()
           })
-
 
        },
       createLab(){
          let flag = 0;
          this.formLabelAlign.userId = this.userId;
-         this.formLabelAlign.labState="成功";  ///////////////////写死的状态
-         this.formLabelAlign.operationState="0"; ////////////////默认执行状态为0 待执行
+         this.formLabelAlign.labState="待同步";  ///////////////////写死的状态
+         this.formLabelAlign.operationState="1"; ////////////////默认执行状态为1 不自动同步   0 自动同步
         this.formLabelAlign.shopIDs="";
         let length = this.sels.length
         for(let i =0 ; i<length;i++)
@@ -411,7 +451,55 @@
           this.$message.error("请选择主键类型");flag = 1
         }
 
-        if(flag==0){
+
+        if(flag==0&&this.checked==true){                        // 全选购物车时
+          this.formLabelAlign.shopIDs = "all";    // 全选时 shopids 字符串存 all  放到后端去判断
+        // this.formLabelAlign.times = this.searchCGP.times        //暂时注释
+        this.formLabelAlign.hostKind = this.searchCGP.hostKind
+        this.formLabelAlign.pv = this.searchCGP.pv
+        this.formLabelAlign.sumOrCount = this.searchCGP.sumOrCount
+        this.formLabelAlign.order = this.searchCGP.order
+          if(this.searchCGP.size=""){this.formLabelAlign.size="100000"}
+          else{this.formLabelAlign.size = this.searchCGP.size}
+        this.formLabelAlign.webIds = this.searchCGP.webIds
+        this.formLabelAlign.pvs = this.searchCGP.pvs
+          if(this.searchCGP.times==""){   //都不选
+            this.searchCGP.timeStart = "2018-01-29T16:00:00.000Z"
+            this.searchCGP.timeEnd = "2050-03-06T16:00:00.000Z"
+            this.formLabelAlign.timeStart = this.searchCGP.timeStart  //暂时注释
+            this.formLabelAlign.timeEnd = this.searchCGP.timeEnd
+          }else {
+            this.formLabelAlign.timeStart=this.searchCGP.times[0]
+            this.formLabelAlign.timeEnd=this.searchCGP.times[1]
+          }
+
+        this.createState=0;
+        createLabel(this.formLabelAlign).then(data=>{
+          console.log(data)
+          this.$message.success(data.msg)
+          this.$router.push({ path: '/lable' })
+        })
+      }
+        if(flag==0&&this.checked==false){                      //非全选购物车时
+            // this.topNsearch()
+          // this.formLabelAlign.times = this.searchCGP.times
+          this.formLabelAlign.hostKind = this.searchCGP.hostKind
+          this.formLabelAlign.pv = this.searchCGP.pv
+          this.formLabelAlign.sumOrCount = this.searchCGP.sumOrCount
+          this.formLabelAlign.order = this.searchCGP.order
+          if(this.searchCGP.size=""){this.formLabelAlign.size="100000"}
+          else{this.formLabelAlign.size = this.searchCGP.size}
+          this.formLabelAlign.webIds = this.searchCGP.webIds
+          this.formLabelAlign.pvs = this.searchCGP.pvs
+          if(this.searchCGP.times==""){   //都不选
+            this.searchCGP.timeStart = "2018-01-29T16:00:00.000Z"
+            this.searchCGP.timeEnd = "2050-03-06T16:00:00.000Z"
+            this.formLabelAlign.timeStart = this.searchCGP.timeStart  //暂时注释
+            this.formLabelAlign.timeEnd = this.searchCGP.timeEnd
+          }else {
+            this.formLabelAlign.timeStart=this.searchCGP.times[0]
+            this.formLabelAlign.timeEnd=this.searchCGP.times[1]
+          }
           this.createState=0;
           createLabel(this.formLabelAlign).then(data=>{
             console.log(data)
@@ -420,9 +508,86 @@
           })
         }
 
+      },
+      topNsearch(){
+         if(this.searchCGP.size==""){
+           this.$message.info("请填写排名条数")
+         }else {
+           console.log(this.sels)
+           let length = this.sels.length
+           for(let i =0 ; i<length;i++)
+           {
+             this.searchCGP.webIds +=',' + '"'+this.sels[i].webId + '"'
+             this.searchCGP.pvs +=','+this.sels[i].pv
+           }
+           if(this.searchCGP.webIds.length > 0){
+             console.log(this.searchCGP.times)
+              if(this.searchCGP.times==""){   //都不选
+                this.searchCGP.timeStart = "2018-01-29T16:00:00.000Z"
+                this.searchCGP.timeEnd = "2050-03-06T16:00:00.000Z"
+             }
+             this.searchCGP.times = this.searchCGP.times
+             this.searchCGP.timeStart = this.searchCGP.times[0]
+             this.searchCGP.timeEnd = this.searchCGP.times[1]
+             this.searchCGP.webIds = this.searchCGP.webIds.substring(1)
+             console.log(this.searchCGP)
+             if(this.checked==true){                       //当全选购物车时，webid为 all  交给后端判断
+               this.searchCGP.webIds="all";
+             }
+             topN(this.searchCGP).then(data=>{
+               this.cgpNumber = data.total
+               this.searchCGP.webIds = ""
+             })
+           }
+         }
 
 
 
+      },
+      shopDelete($index){                    // 删除功能
+
+           this.tempShop.id  = this.tableData[$index].id
+        deleteShop(this.tempShop).then(data=>{
+           this.$message.success(data.msg)
+          this.getList();
+        })
+
+      },
+      deleteAllshop(){
+        let _vue = this;
+        this.dearr=""
+        let length = this.sels.length
+        for(let i =0 ; i<length;i++)
+        {
+          this.ids.dearr+=","+this.sels[i].id
+        }
+        if(this.checked ==true){
+          this.ids.dearr="all";
+        }
+        console.log(this.ids.dearr)
+        this.$confirm('确定批量删除?', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          type: 'warning'
+        }).then(() => {
+          deleteAll(this.ids).then(data=>{
+            _vue.getList()
+            let msg = data.msg
+            _vue.$message.success(msg)
+          }).catch(data=>{
+            _vue.$message.error("删除失败")
+          })
+          // _vue.$http({
+          //   url: "http://localhost:7001/skyeye/deleteAll",
+          //   method: "post",
+          //   data: this.dearr
+          // }).then(() => {
+          //   _vue.getList()
+          //   _vue.$message.success("成功删除批量用户")
+          // }).catch(() => {
+          //   _vue.$message.error("删除失败")
+          // })
+        })
       },
       handleSizeChange(val) {
         //改变每页数量
@@ -448,9 +613,15 @@
         this.getList()
 
       },
-      selsChange(sels){           //多选框监听器
-
-        this.sels = sels
+      selsChange(rows){           //多选框监听器
+        this.sels =[];
+        if (rows) {
+          rows.forEach(row => {
+            if (row) {
+              this.sels.push(row);
+            }
+          });
+        }
         console.log(this.sels)
       },
       toURL($index) {                //标题跳转网页
@@ -458,18 +629,80 @@
         window.open(url, '_blank');
       },
       showcreate(){
-         this.createState =1;
-         this.formLabelAlign.keyType='';
-         this.formLabelAlign.labelCaliber = '';
-         this.formLabelAlign.accountPeriod = '';
-         this.formLabelAlign.labelName= '';
-        this.formLabelAlign.crtTime = '';
-        this.formLabelAlign.labState = '';
-        this.formLabelAlign.lastSynchronizarion = '';
-        this.formLabelAlign.userId= '';
-         this.dialogFormVisible = true;
+         if(this.sels.length>0){
+           this.createState =1;
+           this.formLabelAlign.keyType='';
+           this.formLabelAlign.labelCaliber = '';
+           this.formLabelAlign.accountPeriod = '';
+           this.formLabelAlign.labelName= '';
+           this.formLabelAlign.crtTime = '';
+           this.formLabelAlign.labState = '';
+           this.formLabelAlign.lastSynchronizarion = '';
+           this.formLabelAlign.userId= '';
+           this.dialogFormVisible = true;
+         }else {
+           this.$message.info("请先挑选一条host")
+         }
+      },
+
+
+      chooseAllshop(){
+         console.log("121211212")
+         var _this = this;
+         // this.$nextTick(()=>{
+           console.log(this.checked)
+           if(this.checked ==true){
+             for(let i=0;i<this.tableData.length;i++) {
+               this.$refs.filterTable.toggleRowSelection(this.tableData[i],true);
+             }
+           }
+
+           if(this.checked ==false){
+                _this.choosestate= 3
+             console.log("choosestate:"+_this.choosestate)
+             // for(let i=0;i<this.tableData.length;i++) {
+             //   this.$refs.filterTable.toggleRowSelection(this.tableData[i],false);
+             // }
+             this.$refs.filterTable.clearSelection()
+              this.clearshopcar();
+             console.log(this.sels)
+           }
+         // })
 
       },
+      ischooseAllshop(){
+         // this.$nextTick(()=>{
+           console.log(this.checked)
+           if(this.checked ==true){
+             for(let i=0;i<this.tableData.length;i++) {
+               this.$refs.filterTable.toggleRowSelection(this.tableData[i],true);
+             }
+           }
+           // if(this.checked ==false&&this.choosestate==3){
+           //   console.log("check =falle  choosestatae = 3 执行了")
+           //   for(let i=0;i<this.tableData.length;i++) {
+           //     console.log("6666")
+           //     console.log(this.sels)
+           //     this.$refs.filterTable.toggleRowSelection(this.tableData[i],false);
+           //   }
+           // }
+         // })
+      },
+      ischooseAllshopfasle(){
+        if(this.checked ==false){
+          this.choosestate= 3
+          console.log("choosestate:"+this.choosestate)
+          for(let i=0;i<this.tableData.length;i++) {
+            this.$refs.filterTable.toggleRowSelection(this.tableData[i],false);
+          }
+          this.clearshopcar();
+          console.log(this.sels)
+        }
+      },
+      clearshopcar(){
+         this.sels=[];
+      },
+
       ////////////////////////////////////////////////////////////////////////////////////////////
       handleChange(val) {
         console.log(val);
@@ -566,4 +799,5 @@
     word-break: normal;
     font-family: arial;
   }
+
 </style>
