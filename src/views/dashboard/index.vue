@@ -3,18 +3,26 @@
   <el-container>
     <!--    头部搜索框-->
     <el-header class="header">
-      <div class="logo" style="position: absolute;left: 30px">
-        <div class="logoImg" style="width: 48px;height: 48px">&nbsp</div>
+      <div class="logo" style="position: absolute;left: 40px;margin-top: -5px">
+<!--        <div class="logoImg" style="width: 48px;height: 48px">&nbsp</div>-->
+<!--        <span style="margin-bottom: 3px;margin-left: 30px">关键字</span>-->
+        关键字
       </div>
       <div class="searchInput" style="position: absolute;left: 20px">
-        <el-input v-model="searchKey.keys" placeholder="请输入内容" style="width: 440px" @keyup.enter.native="searchInfoKey"/>
-
+        <el-input v-if="SelectRadio == '1'" v-model="searchKey.keys" placeholder="请输入内容" style="width: 440px" @keyup.enter.native="searchInfoKey"/>
+        <el-input v-if="SelectRadio == '2'" v-model="searchURL.urlKey" placeholder="请输入内容" style="width: 440px" @keyup.enter.native="searchInfoKey"/>
         <el-button slot="append" icon="el-icon-search" style="background: #3385ff;border-bottom: 1px solid #2d78f4;color: #fff;" @click.native="searchInfoKey">搜索</el-button>
         <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;margin-left: 30px" @click="drawer = true">高级搜索</el-link>
-        <!--        <el-button size="small" style="position: absolute;right: 0px;top: 60px;z-index: 60">批量加入分类</el-button>-->
+        <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;margin-left: 30px" @click="toUrlSearch">URL模式</el-link>
+<!--        <template>-->
+<!--          <el-radio style="margin-left: 15px" v-model="SelectRadio" label="1">Host模式</el-radio>-->
+<!--          <el-radio v-model="SelectRadio" label="2">URL模式</el-radio>-->
+<!--        </template>-->
       </div>
       <div style="width: 280px;height: 30px;float: right">
-        <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;" @click="toShop">host购物车</el-link>
+        <el-link v-if="SelectRadio == '1'" :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;" @click="toShop">host购物车</el-link>
+        <el-link v-if="SelectRadio == '2'" :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;" @click="toUrlShop">URL购物车</el-link>
+
         <el-divider direction="vertical"/>
         <el-link :underline="false" style="border-bottom: 1px solid #333;height: 12px;font-family: arial;font-size: 12px;" @click="toHelp">帮助</el-link>
         <el-divider direction="vertical"/>
@@ -105,7 +113,7 @@
     <!--    中间内容部分-->
     <el-main class="main">
       <!--      分类条件筛选部分-->
-      <div style="background: #f8f8f8;line-height: 40px">
+      <div v-if="SelectRadio == '1'" style="background: #f8f8f8;line-height: 40px">
         <el-tabs v-model="activeName" class="tab-container" style="line-height:40px;margin-left: 120px;padding-top:5px;line-height:30px;font-size: 20px;overflow-y:hidden;" @tab-click="handleClick">
           <el-tab-pane
             v-for="(item, index) in tabPane"
@@ -156,7 +164,7 @@
         <div style="width: 770px;float: left;">
           <div v-for="(item, index) in tableData">
             <el-checkbox v-model="checks[index]" style="margin-left: -20px;top: 8px;" @click="oneCheck(index)" />
-            <el-link :underline="false" style="border-bottom: 1px solid black;margin-top: 14px;color: #0000CC" @click="toURL(item.url)">{{ item.title }}</el-link><br>
+            <el-link :underline="false" style="border-bottom: 1px solid black;margin-top: 14px;color: #0000CC" @click="toURL(item.urlShop)">{{ item.title }}</el-link><br>
             <span style="margin-right: 5px;color: green;font-size: 14px;">{{item.uriShow}}</span>
             <span style="font-size: 12px;color: #4C4C4C;font-weight: bold">近七日UV/PV：{{ item.uv }}/{{ item.pv }}</span><br>
             <span style="font-size: 13px;"><span style="color: #97a8be"></span>{{ item.content }}</span><br>
@@ -246,6 +254,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import advancedSearch from './../advancedSearch'
   import lable from './../lable'
   import signIn from './../signIn'
@@ -263,12 +272,17 @@
         dialogFormVisibleHelp:false,//弹框
         radio: '2',
         pageIn:1,
+        SelectRadio:'1',
         total:0,
         searchfs:"",
         tabPaneName:'nothing',
         searchKey: {
           keys: '',
           page: 0
+        },
+        searchURL:{
+          urlKey:"",
+          pageable: 1
         },
         checks:[false,false,false,false,false,false,false,false,false,false],
         advancedKey: {
@@ -456,24 +470,39 @@
             this.tempShop.pv = this.tableData[i].pv
             this.tempShop.uv = this.tableData[i].uv
             this.tempShop.content = this.tableData[i].content
-            this.tempShop.url = this.tableData[i].url
+            this.tempShop.url = this.tableData[i].urlShop
             this.tempShop.webId = this.tableData[i].uri
             this.tempShop.userId = this.userId
-            let obj={
-              id:'',
-              title: this.tempShop.title ,
-              pv: this.tempShop.pv ,
-              uv: this.tempShop.uv,
-              content:this.tempShop.content,
-              crtTime:'',
-              url: this.tempShop.url,
-              webId: this.tempShop.webId,
-              userId:this.tempShop.userId,   // 当前操作用户的id
-              deleteState:'1'
-
+            let obj
+            if(this.SelectRadio == '2'){
+              obj={
+                id:'',
+                title: this.tempShop.title ,
+                pv: this.tempShop.pv ,
+                uv: this.tempShop.uv,
+                content:this.tempShop.content,
+                crtTime:'',
+                url: this.tempShop.url,
+                webId: this.tempShop.webId,
+                userId:this.tempShop.userId,   // 当前操作用户的id
+                deleteState:'1',
+                type:"url"
+              }
+            }else{
+              obj={
+                id:'',
+                title: this.tempShop.title ,
+                pv: this.tempShop.pv ,
+                uv: this.tempShop.uv,
+                content:this.tempShop.content,
+                crtTime:'',
+                url: this.tempShop.url,
+                webId: this.tempShop.webId,
+                userId:this.tempShop.userId,   // 当前操作用户的id
+                deleteState:'1'
+              }
             }
             this.shops.arr.push(obj)
-            console.log(this.tempShop.title)
           }
         }
         if(this.shops.arr.length===0){
@@ -554,6 +583,12 @@
       toShop() {
         this.$router.push({ path: '/shop' })
       },
+      toUrlShop() {
+        this.$router.push({ path: '/urlShop' })
+      },
+      toUrlSearch() {
+        this.$router.push({ path: '/toUrlSearch' })
+      },
       toMine() {
         console.log('1111')
         this.$router.push({ path: '/mine' })
@@ -606,16 +641,21 @@
       mouseEnter() { this.isActive = true },
       mouseOut() { this.isActive = false },
       searchInfoKey(){
-        this.ruleForm.allInKey = ""
-        this.ruleForm.isKey = ""
-        this.ruleForm.inKey = ""
-        this.ruleForm.notInKey = ""
-        this.advancedKey.pvBegin = ""
-        this.advancedKey.uvBegin = ""
-        this.advancedKey.pvEnd = ""
-        this.advancedKey.uvEnd = ""
-        this.searchfs = 'key'
-        this.searchInfo();
+        if(this.SelectRadio == '1'){
+          this.ruleForm.allInKey = ""
+          this.ruleForm.isKey = ""
+          this.ruleForm.inKey = ""
+          this.ruleForm.notInKey = ""
+          this.advancedKey.pvBegin = ""
+          this.advancedKey.uvBegin = ""
+          this.advancedKey.pvEnd = ""
+          this.advancedKey.uvEnd = ""
+          this.searchfs = 'key'
+          this.searchInfo();
+        }else {
+
+
+        }
       },
       searchInfo() {
         if(this.searchfs == 'key'){
@@ -689,22 +729,42 @@
         this.tempShop.pv = this.tableData[index].pv
         this.tempShop.uv = this.tableData[index].uv
         this.tempShop.content = this.tableData[index].content
-        this.tempShop.url = this.tableData[index].url
+        this.tempShop.url = this.tableData[index].urlShop
         this.tempShop.webId = this.tableData[index].uri
         this.tempShop.userId = this.userId
-        let obj={
-          id:'',
-          title: this.tempShop.title ,
-          pv: this.tempShop.pv ,
-          uv: this.tempShop.uv,
-          content:this.tempShop.content,
-          crtTime:'',
-          url: this.tempShop.url,
-          webId: this.tempShop.webId,
-          userId:this.tempShop.userId,   // 当前操作用户的id
-          deleteState:'1'
+        let obj
+        if(this.SelectRadio == '2'){
 
         }
+         if(this.SelectRadio == '2'){
+           obj= {
+             id: '',
+             title: this.tempShop.title,
+             pv: this.tempShop.pv,
+             uv: this.tempShop.uv,
+             content: this.tempShop.content,
+             crtTime: '',
+             url: this.tempShop.url,
+             webId: this.tempShop.webId,
+             userId: this.tempShop.userId,   // 当前操作用户的id
+             deleteState: '1',
+             type: "url"
+           }
+           }else{
+             obj={
+               id:'',
+               title: this.tempShop.title ,
+               pv: this.tempShop.pv ,
+               uv: this.tempShop.uv,
+               content:this.tempShop.content,
+               crtTime:'',
+               url: this.tempShop.url,
+               webId: this.tempShop.webId,
+               userId:this.tempShop.userId,   // 当前操作用户的id
+               deleteState:'1'
+             }
+           }
+
         this.shops.arr.push(obj)
         addToShop(this.shops).then(data=>{
           this.$message.success("成功添加到购物车")

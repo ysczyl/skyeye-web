@@ -23,13 +23,13 @@ export default {
   cgpCreate: (res) => {
     return {
       code: 20000,
-      params: param2Obj(res.url)
+      params: param2Obj(res.urlShop)
     }
   },
   csvUpload: (res) => {
     return {
       code: 20000,
-      params: param2Obj(res.url),
+      params: param2Obj(res.urlShop),
       data: { data: 51111 }
     }
   },

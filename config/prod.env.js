@@ -12,8 +12,8 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  BASE_API: '"http://10.76.251.101:30014/skyeye"'
+  // BASE_API: '"http://10.76.251.101:30015/skyeye"'
 
-  // BASE_API: '"http://10.70.138.60:80/skyeye"'
+  BASE_API: '"http://10.70.138.60:80/skyeye"'
   // BASE_API: '"http://20.26.85.32:30011/skyeye"'
 }

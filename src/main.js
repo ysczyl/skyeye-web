@@ -28,14 +28,15 @@ import '@/permission' // permission control
  * If you remove `../mock` it will automatically request easy-mock data.
  */
 import '../mock' // simulation data
-
+import axios from 'axios'
+import qs from 'qs'
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
 
-import axios from 'axios'
 Vue.prototype.$http = axios
-
+Vue.prototype.$ajax=axios
+Vue.prototype.$qs=qs
 new Vue({
   el: '#app',
   router,

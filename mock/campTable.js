@@ -28,7 +28,7 @@ export default {
     return {
       code: 20000,
       data: { total: 999, running: 444, finished: 555 },
-      params: param2Obj(res.url)
+      params: param2Obj(res.urlShop)
     }
   },
   getPersonList: (res) => {
@@ -44,7 +44,7 @@ export default {
     return {
       code: 20000,
       data: items,
-      params: param2Obj(res.url)
+      params: param2Obj(res.urlShop)
     }
   },
   getActDetails: (res) => {
@@ -58,14 +58,14 @@ export default {
     return {
       code: 20000,
       data: items,
-      params: param2Obj(res.url)
+      params: param2Obj(res.urlShop)
     }
   },
 
   activityCreate: (res) => {
     return {
       code: 20000,
-      params: param2Obj(res.url)
+      params: param2Obj(res.urlShop)
     }
   },
 

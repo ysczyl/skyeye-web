@@ -20,3 +20,15 @@ export function searchKind(params) {
     }
   })
 }
+
+
+
+export function searchUrlKey(params) {
+  return request({
+    url: '/searchUrlKey',
+    method: 'post',
+    data :{
+      ...params
+    }
+  })
+}

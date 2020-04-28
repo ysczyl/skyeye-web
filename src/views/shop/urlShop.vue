@@ -17,16 +17,7 @@
             <el-radio label="日"></el-radio>
             <el-radio label="月"></el-radio>
           </el-radio-group>
-          <!-- <template style="display: inline-block">
-             <el-radio v-model="radio" label="1">一次性推送</el-radio>
-             <el-radio v-model="radio2" label="2">周期推送</el-radio>
-           </template>
-           <el-form-item v-if="radio2 == 2" label="">
-             <template style="display: inline-block">
-               <el-radio v-model="formLabelAlign.accountPeriod" label="1">月</el-radio>
-               <el-radio v-model="formLabelAlign.accountPeriod" label="2">日</el-radio>
-             </template>
-           </el-form-item>-->
+
         </el-form-item>
 
         <el-form-item label="客群描述">
@@ -46,49 +37,13 @@
     <!--    中间内容部分-->
     <el-main style="position:absolute;width: 1024px;left: calc(50% - 512px);">
       <el-collapse v-model="activeNames" @change="handleChange">
-        <!--        <el-collapse-item name="1">-->
-        <!--          <template slot="title">-->
-        <!--            <span class="lable_font">标签定制</span>-->
-        <!--          </template>-->
-        <!--          <el-form style="width: 500px;margin-left: calc(50% - 250px);" :label-position="labelPosition" label-width="80px" :model="formLabelAlign">-->
-        <!--            <el-form-item label="名称">-->
-        <!--              <el-input v-model="formLabelAlign.name"></el-input>-->
-        <!--            </el-form-item>-->
-        <!--            <el-form-item label="口径">-->
-        <!--              <el-input type="textarea" :rows="3" v-model="formLabelAlign.desc"></el-input>-->
-        <!--            </el-form-item>-->
-        <!--            <el-form-item label="账期">-->
-        <!--              <template style="display: inline-block">-->
-        <!--                <el-radio v-model="radio" label="1">月</el-radio>-->
-        <!--                <el-radio v-model="radio" label="2">日</el-radio>-->
-        <!--              </template>-->
-        <!--              <div v-if="radio == 1" class="block">-->
-        <!--                <el-date-picker-->
-        <!--                  v-model="month"-->
-        <!--                  type="month"-->
-        <!--                  placeholder="选择月">-->
-        <!--                </el-date-picker>-->
-        <!--              </div>-->
-        <!--              <div v-if="radio == 2" class="block">-->
-        <!--                <el-date-picker-->
-        <!--                  v-model="dateTime"-->
-        <!--                  type="date"-->
-        <!--                  placeholder="选择日期">-->
-        <!--                </el-date-picker>-->
-        <!--              </div>-->
-        <!--            </el-form-item>-->
-        <!--            <el-form-item style="margin-left: 60px">-->
-        <!--              <el-button style="width: 120px" type="primary" @click="onSubmit">定制标签</el-button>-->
-        <!--              <el-button style="margin-left: 60px;width: 120px">取消</el-button>-->
-        <!--            </el-form-item>-->
-        <!--          </el-form>-->
-        <!--        </el-collapse-item>-->
+
         <el-collapse-item name="2">
           <template slot="title">
-            <span class="lable_font">host购物车</span>
+            <span class="lable_font">URL购物车</span>
           </template>
           <div style="margin-top: 15px;">
-            <el-input placeholder="请输入host标题关键字" v-model="listQuery.name" @keyup.enter.native="getList" class="input-with-select">
+            <el-input placeholder="请输入URL标题关键字" v-model="listQuery.name" @keyup.enter.native="getList" class="input-with-select">
               <el-button slot="append" icon="el-icon-search" @click="getList"></el-button>
             </el-input>
           </div>
@@ -108,42 +63,11 @@
                     type="daterange"
                     range-separator="至"
                     start-placeholder="开始日期"
-                    end-placeholder="结束日期">
+                    end-placeholder="结束日期"
+                    >
                   </el-date-picker>
+                  <el-button type="primary" size="mini" @click="topNsearch">搜索</el-button><br>
                 </div>
-<!--                <span style="margin-right:10px">分组TOPN</span>-->
-                <span>检索条件：</span>
-<!--                <span>分组条件</span>-->
-                <el-select size="mini" v-model="searchCGP.hostKind" style="width: 100px" @change="checkCgp">
-                  <el-option value="host">host</el-option>
-                  <el-option value="客群">客群</el-option>
-                </el-select>
-<!--                <span>统计指标</span>-->
-                <span>近7日PV</span>
-<!--                <el-select size="mini" v-model="searchCGP.pv" style="width: 100px" @change="checkCgp">-->
-<!--                  <el-option value="PV">PV</el-option>-->
-<!--                </el-select>-->
-<!--                <el-select size="mini" v-model="searchCGP.sumOrCount" style="width: 100px" @change="checkCgp">-->
-<!--                  <el-option value="求和">求和</el-option>-->
-<!--                  <el-option value="计数">计数</el-option>-->
-<!--                </el-select>-->
-                <el-select size="mini" v-model="searchCGP.operation" style="width: 100px" @change="checkCgp">
-                  <el-option value="大于">大于</el-option>
-                  <el-option value="大于等于">大于等于</el-option>
-                  <el-option value="小于">小于</el-option>
-                  <el-option value="小于等于">小于等于</el-option>
-                </el-select>
-<!--                <spans>大于</spans>-->
-                <el-input size="mini" v-model="searchCGP.pvNumber" style="width: 100px" @change="checkCgp"></el-input>
-                <!--                <span>按</span>-->
-                <!--                <el-select size="mini" v-model="searchCGP.order" style="width: 100px" @change="checkCgp">-->
-                <!--                  <el-option value="从大到小">从大到小</el-option>-->
-                <!--                  <el-option value="从小到大">从小到大</el-option>-->
-                <!--                </el-select>-->
-                <!--                <span>排名，取前</span>-->
-                <!--                <el-input size="mini" v-model="searchCGP.size" style="width: 100px" @change="checkCgp"></el-input>-->
-                <!--                <span>名</span>-->
-                <el-button type="primary" size="mini" @click="topNsearch">搜索</el-button><br>
                 <!--                <el-input type="button">查询</el-input>-->
                 <span>客群人数：{{this.cgpNumber}}</span>
               </div>
@@ -153,8 +77,8 @@
           <div id="main" style="width:100%;">
             <div id="left" style="width:25%;float:left;" >
               <div align="left"><el-checkbox  v-model="checked"  @change="chooseAllshop">全选购物车</el-checkbox>
-                <span style="color:silver" v-if="checked==false">|当前已选中{{this.sels.length}}个host</span>
-                <span style="color:silver" v-if="checked==true">|当前已选中{{totalCount}}个host</span>
+                <span style="color:silver" v-if="checked==false">|当前已选中{{this.sels.length}}URL</span>
+                <span style="color:silver" v-if="checked==true">|当前已选中{{totalCount}}个URL</span>
               </div>
             </div>
             <div id="right" style="width:65%;float:right;" align="right">
@@ -182,13 +106,6 @@
                 <span v-text="getIndex(scope.$index)"> </span>
               </template>
             </el-table-column>
-            <!--            <el-table-column-->
-            <!--              prop="crtTime"-->
-            <!--              label="收集时间"-->
-            <!--              sortable="custom"-->
-            <!--              width="180"-->
-            <!--            >-->
-            <!--            </el-table-column>-->
             <el-table-column
               label="标题"
               width="200"
@@ -204,11 +121,6 @@
               align="center">
               <template slot-scope="scope">{{scope.row.uv}}/{{scope.row.pv}}</template>
             </el-table-column>
-            <!--            <el-table-column-->
-            <!--              prop="pv"-->
-            <!--              label="pv"-->
-            <!--              width="100">-->
-            <!--            </el-table-column>-->
             <el-table-column
               prop="content"
               label="内容"
@@ -216,18 +128,10 @@
               align="center"
             >
             </el-table-column>
-            <!--            <el-table-column-->
-            <!--              prop="url"-->
-            <!--              label="地址">-->
-            <!--              @click="toURL('http://www.4399.com/top/top-6.htm')"-->
-            <!--            </el-table-column>-->
 
 
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <!--                <el-button-->
-                <!--                  size="mini"-->
-                <!--                  @click="handleEdit(scope.$index, scope.row)">查看</el-button>-->
                 <el-button
                   size="mini"
                   type="danger"
@@ -258,11 +162,14 @@
 </template>
 
 <script>
-  import {getlistById,deleteShop,deleteAll} from '../../api/shop'
+
+
+  import axios from 'axios'
+  import {getURLlistById,deleteShop,deleteAll} from '../../api/shop'
   import {createLabel,updateOnce,topN} from '../../api/label'
   import {mapGetters} from 'vuex'
   export default {
-    name: 'Shop',
+    name: 'urlShop',
     data() {
       return {
         tableData:[],
@@ -277,18 +184,11 @@
           region:""
         },
         searchCGP:{
-          times:[new Date(this.getDateInfo8(new Date())), new Date(this.getDateInfo1(new Date()))],
-          hostKind:"host",
-          pv:"PV",
-          sumOrCount:"求和",
-          order:"从大到小",
-          size:"800000",
+          times:[new Date(this.getDateInfo(new Date())), new Date()],
           webIds: "",
-          pvs:"",
           timeStart:"",
           timeEnd:"",
-          pvNumber:"",
-          operation:"大于"
+          urlList:[]
         },
         labelPosition: 'right',
         month:"",
@@ -312,13 +212,11 @@
           pv:"PV",
           sumOrCount:"求和",
           order:"从大到小",
-          size:"8000000",
+          size:"",
           webIds: "",
           pvs:"",
           timeStart:"",
-          timeEnd:"",
-          pvNumber:"",
-          operation:"大于"
+          timeEnd:""
         },
         radio: '1',
         radio2: '1',
@@ -436,7 +334,7 @@
 
       getList(){
         this.listQuery.id = this.userId
-        getlistById(this.listQuery).then(data=>{
+        getURLlistById(this.listQuery).then(data=>{
           this.tableData = data.data
           this.totalCount = data.total
           this.ischooseAllshop()  //选择购物车全选后，分页后依然全部选中
@@ -450,8 +348,6 @@
         this.formLabelAlign.labState="待同步";  ///////////////////写死的状态
         this.formLabelAlign.operationState="1"; ////////////////默认执行状态为1 不自动同步   0 自动同步
         this.formLabelAlign.shopIDs="";
-        this.formLabelAlign.pvNumber = this.searchCGP.pvNumber
-        this.formLabelAlign.operation = this.searchCGP.operation
         let length = this.sels.length
         for(let i =0 ; i<length;i++)
         {
@@ -526,15 +422,12 @@
 
       },
       topNsearch(){
-        if(this.searchCGP.size==""){
-          this.$message.info("请填写排名条数")
-        }else {
           console.log(this.sels)
           let length = this.sels.length
           for(let i =0 ; i<length;i++)
           {
             this.searchCGP.webIds +=',' + '"'+this.sels[i].webId + '"'
-            this.searchCGP.pvs +=','+this.sels[i].pv
+            this.searchCGP.urlList.push({"url":this.sels[i].webId})
           }
           if(this.searchCGP.webIds.length > 0){
             console.log(this.searchCGP.times)
@@ -550,12 +443,19 @@
             if(this.checked==true){                       //当全选购物车时，webid为 all  交给后端判断
               this.searchCGP.webIds="all";
             }
-            topN(this.searchCGP).then(data=>{
-              this.cgpNumber = data.total
-              this.searchCGP.webIds = ""
-            })
+            console.log(this.searchCGP.timeEnd)
+            console.log(this.searchCGP.timeStart)
+            console.log(this.formatDate(this.searchCGP.timeStart))
+            console.log(this.formatDate(this.searchCGP.timeEnd))
+            this.searchCGP.timeStart = this.formatDate(this.searchCGP.timeStart)
+            this.searchCGP.timeEnd = this.formatDate(this.searchCGP.timeEnd)
+            // topN(this.searchCGP).then(data=>{
+            //   this.cgpNumber = data.total
+            //   this.searchCGP.webIds = ""
+            // })
+            this.loadPost()
           }
-        }
+
 
 
 
@@ -568,12 +468,6 @@
           this.getList();
         })
 
-      },
-      getDateInfo8:function(date){
-        return date.setDate(date.getDate()-8);
-      },
-      getDateInfo1:function(date){
-        return date.setDate(date.getDate()-1);
       },
       deleteAllshop(){
         let _vue = this;
@@ -648,7 +542,7 @@
       },
       toURL($index) {                //标题跳转网页
         let url = this.tableData[$index].urlShop
-        window.open(url, '_blank');
+        window.open(urlShop, '_blank');
       },
       showcreate(){
         if(this.sels.length>0){
@@ -663,7 +557,7 @@
           this.formLabelAlign.userId= '';
           this.dialogFormVisible = true;
         }else {
-          this.$message.info("请先挑选一条host")
+          this.$message.info("请先挑选一条URL")
         }
       },
 
@@ -772,7 +666,29 @@
         }else {
           this.cgpUserShow  = false
         }
-      }
+      },
+      formatDate(date){ //设置时间转换格式
+        var y = date.getFullYear();  //获取年
+        var m = date.getMonth() + 1;  //获取月
+        m = m < 10 ? '0' + m : m;  //判断月是否大于10
+        var d = date.getDate();  //获取日
+        d = d < 10 ? ('0' + d) : d;  //判断日期是否大10
+        return y + '-' + m + '-' + d;  //返回时间格式
+  },
+      getDateInfo:function(date){
+        return date.setDate(date.getDate()-7);
+      },
+      loadPost(){
+        axios.post(`http://www.baidu.com`, this.searchCGP)
+          .then((response) => {
+            console.log('response', response);
+            return response;
+          })
+          .catch((error) => {
+            console.log('error', error);
+            return error;
+          });
+      },
     },
     computed: {
       ...mapGetters([

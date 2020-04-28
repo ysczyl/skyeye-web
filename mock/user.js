@@ -41,7 +41,7 @@ export default {
     }
   },
   getInfo: res => {
-    const { token } = param2Obj(res.url)
+    const { token } = param2Obj(res.urlShop)
     const info = users[token]
 
     if (info) {

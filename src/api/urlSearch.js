@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
-  /*购物车接口*/
+//状态列表
 export function getlistById(params) {
   return request({
-    url: '/getShopByUserId',
+    url: '/url/getUrlListByUserId',
     method: 'post',
     data: {
       ...params
@@ -11,10 +11,10 @@ export function getlistById(params) {
   })
 }
 
-
-export function addToShop(params) {
+//新增查询
+export function addUrlSearch(params) {
   return request({
-    url: '/addShop',
+    url: '/url/addUrlSearch',
     method: 'post',
     data: {
       ...params
@@ -23,10 +23,10 @@ export function addToShop(params) {
 }
 
 
-
-export function deleteShop(params) {
+//获取url详情
+export function getUrlList(params) {
   return request({
-    url: '/deleteShop',
+    url: '/url/getUrlList',
     method: 'post',
     data: {
       ...params
@@ -34,10 +34,10 @@ export function deleteShop(params) {
   })
 }
 
-
-export function deleteAll(params) {
+//发起探索请求
+export function getExplore(params) {
   return request({
-    url: '/deleteAllShop',
+    url: '/url/getExplore',
     method: 'post',
     data: {
       ...params
@@ -46,15 +46,14 @@ export function deleteAll(params) {
 }
 
 
-
-
-
-export function getURLlistById(params) {
+//发起推送请求
+export function getCgpExplore(params) {
   return request({
-    url: '/getURLShopByUserId',
+    url: '/url/getCgpExplore',
     method: 'post',
     data: {
       ...params
     }
   })
 }
+
